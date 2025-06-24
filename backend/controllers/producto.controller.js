@@ -7,7 +7,6 @@ const ProductoController = {
   crearProducto: async (req, res) => {
     try {
       const {
-        id_usuario,
         id_categoria,
         id_tipo_donacion,
         nombre,
@@ -18,6 +17,8 @@ const ProductoController = {
         precio,
         cantidad
       } = req.body;
+
+      const id_usuario = req.usuario?.id_usuario;
 
       if (!id_usuario || !id_categoria || !nombre || !estado || !tipo_operacion) {
         return res.status(400).json({ mensaje: 'Faltan campos obligatorios' });

@@ -17,7 +17,13 @@ export class ProductoService {
 
   // Publicar un nuevo producto
   publicarProducto(formData: FormData): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, formData);
+    const token = localStorage.getItem('token'); // o donde guardes tu JWT
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.post(`${this.apiUrl}`, formData, { headers });
   }
 
   // 🔍 Obtener un producto por ID (para detalle-producto)

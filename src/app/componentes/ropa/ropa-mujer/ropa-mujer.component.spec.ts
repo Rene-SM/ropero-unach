@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RopaMujerComponent } from './ropa-mujer.component';
 
-import { RopaMujerGeneralComponent } from './ropa-mujer-general.component';
-
-describe('RopaMujerGeneralComponent', () => {
-  let component: RopaMujerGeneralComponent;
-  let fixture: ComponentFixture<RopaMujerGeneralComponent>;
+describe('RopaMujerComponent', () => {
+  let component: RopaMujerComponent;
+  let fixture: ComponentFixture<RopaMujerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RopaMujerGeneralComponent]
+      imports: [RopaMujerComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(RopaMujerGeneralComponent);
+
+    fixture = TestBed.createComponent(RopaMujerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

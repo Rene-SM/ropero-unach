@@ -27,21 +27,26 @@ export class DetalleProductoComponent implements OnInit {
       this.productoService.obtenerProductoPorId(+id).subscribe(
         (res) => {
           this.producto = Array.isArray(res) ? res[0] : res;
+           console.log('📦 Producto recibido:', this.producto); 
 
-          if (res.imagen && typeof res.imagen === 'string') {
-            this.producto.imagenes = [res.imagen];
-          } else if (Array.isArray(res.imagenes)) {
-            this.producto.imagenes = res.imagenes;
-          } else {
+          // 🔄 Asegurar que las imágenes se manejen correctamente
+          if (this.producto.imagen && typeof this.producto.imagen === 'string') {
+            this.producto.imagenes = [this.producto.imagen];
+          } else if (!Array.isArray(this.producto.imagenes)) {
             this.producto.imagenes = [];
           }
 
+          // ✅ Seleccionar imagen principal si hay imágenes
           if (this.producto.imagenes.length > 0) {
             this.imagenSeleccionada = this.producto.imagenes[0];
             this.indiceActual = 0;
+          } else {
+            this.imagenSeleccionada = '';
           }
         },
-        (err) => console.error('Error al cargar producto:', err)
+        (err) => {
+          console.error('❌ Error al cargar producto:', err);
+        }
       );
     }
   }

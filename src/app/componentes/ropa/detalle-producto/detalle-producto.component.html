@@ -2,17 +2,29 @@
   <div class="detalle-img">
     <div class="imagen-wrapper">
       <button class="nav-btn izquierda" (click)="anteriorImagen()">&#10094;</button>
-      <img [src]="'http://localhost:3000/' + imagenSeleccionada" alt="Imagen principal" class="imagen-principal" />
+
+      <!-- Imagen principal o placeholder -->
+      <img 
+        [src]="imagenSeleccionada ? 'http://localhost:3000/' + imagenSeleccionada : 'assets/placeholder.png'" 
+        alt="Imagen principal" 
+        class="imagen-principal" />
+
       <button class="nav-btn derecha" (click)="siguienteImagen()">&#10095;</button>
     </div>
 
-    <div class="miniaturas">
+    <!-- Miniaturas solo si hay imágenes -->
+    <div class="miniaturas" *ngIf="producto.imagenes.length > 0">
       <img *ngFor="let img of producto.imagenes"
            [src]="'http://localhost:3000/' + img"
            alt="Miniatura"
            [class.activa]="img === imagenSeleccionada"
            (click)="cambiarImagen(img)" />
     </div>
+
+    <!-- Mensaje si no hay imágenes -->
+    <p *ngIf="producto.imagenes.length === 0" class="text-gray-500 italic text-center mt-2">
+      Este producto no tiene imágenes disponibles.
+    </p>
   </div>
 
   <div class="detalle-info">

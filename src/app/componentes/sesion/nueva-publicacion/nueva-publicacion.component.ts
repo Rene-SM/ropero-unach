@@ -158,7 +158,6 @@ export class NuevaPublicacionComponent implements OnInit {
     }
 
     const formData = new FormData();
-    formData.append('id_usuario', '1');
 
     const claveCategoria = `${this.publicacion.categoriaGeneral}-${this.publicacion.subcategoria}`;
     const idCategoria = this.categoriasDB[claveCategoria];

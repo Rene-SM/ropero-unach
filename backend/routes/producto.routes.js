@@ -5,6 +5,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const ProductoController = require('../controllers/producto.controller');
+const verificarToken = require('../middlewares/auth.middleware');
 
 // Configuración de multer (para imágenes futuras)
 const storage = multer.diskStorage({
@@ -18,12 +19,15 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// ✅ Crear un producto
+router.post('/', verificarToken, upload.array('imagenes', 5), ProductoController.crearProducto);
+
 // Ruta base de prueba
 router.get('/', (req, res) => {
   res.send('Ruta de productos funcionando');
 });
 
-// ✅ Crear un producto
+// ✅ Crear un producto (DUPLICADA — ya no necesaria, pero si decides dejarla, coméntala)
 router.post('/', upload.array('imagenes', 5), ProductoController.crearProducto);
 
 // ✅ Listar todos los productos
@@ -41,11 +45,14 @@ router.get('/donaciones-comunidad', ProductoController.obtenerDonacionesComunida
 // ✅ Nueva ruta para obtener publicaciones por usuario
 router.get('/publicaciones/:idUsuario', ProductoController.obtenerPublicacionesPorUsuario);
 
+// ✅ NUEVA RUTA para historial de moderación (DEBE IR ANTES que /:id)
+router.get('/historial-moderacion', ProductoController.obtenerHistorialModeracion);
+
+// ✅ Obtener un producto por su ID (para el detalle del producto)
+router.get('/:id', ProductoController.obtenerProductoPorId);
+
 // ✅ NUEVA RUTA para eliminar productos por ID (solo admin debe usarla)
 router.delete('/:id', ProductoController.eliminarProducto);
-
-// ✅ NUEVA RUTA para historial de moderación
-router.get('/historial-moderacion', ProductoController.obtenerHistorialModeracion);
 
 // Ruta de prueba
 router.get('/prueba', (req, res) => {

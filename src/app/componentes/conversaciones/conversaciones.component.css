@@ -1,0 +1,156 @@
+/* Contenedor general */
+.conversaciones-container {
+  display: flex;
+  height: 85vh;
+  max-width: 1200px;
+  margin: 30px auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Panel izquierdo (lista de conversaciones) */
+.panel-izquierdo {
+  width: 30%;
+  background-color: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.titulo-panel {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2f855a;
+  margin-bottom: 16px;
+}
+
+/* Contactos */
+.contacto {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.contacto:hover {
+  background-color: #e6f4ea;
+}
+
+.contacto.activo {
+  background-color: #c6f6d5;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  margin-right: 12px;
+}
+
+.info .nombre {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.info .preview {
+  font-size: 13px;
+  color: #718096;
+}
+
+/* Panel derecho (chat) */
+.panel-derecho {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+/* Encabezado */
+.encabezado-chat {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: bold;
+  color: #2f855a;
+  font-size: 16px;
+}
+
+/* Mensajes */
+.mensajes {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Burbuja de mensaje */
+.mensaje-burbuja {
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background-color: #f1f1f1;
+  align-self: flex-start;
+  word-wrap: break-word;
+}
+
+.mensaje-burbuja.propio {
+  background-color: #c6f6d5;
+  align-self: flex-end;
+}
+
+/* Input de mensaje */
+.input-mensaje {
+  display: flex;
+  border-top: 1px solid #e0e0e0;
+  padding: 12px 16px;
+}
+
+.input-mensaje input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 9999px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.input-mensaje input:focus {
+  border-color: #38a169;
+}
+
+.input-mensaje button {
+  margin-left: 10px;
+  background-color: #38a169;
+  color: white;
+  border: none;
+  padding: 0 16px;
+  border-radius: 9999px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.input-mensaje button:hover {
+  background-color: #2f855a;
+}
+
+/* Estado vacío */
+.centro-vacio {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #a0aec0;
+}
+
+.centro-vacio .icono {
+  font-size: 40px;
+  margin-bottom: 10px;
+}

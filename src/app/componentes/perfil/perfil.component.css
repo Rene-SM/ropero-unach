@@ -1,0 +1,364 @@
+/* Layout general */
+.perfil-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Barra lateral */
+.sidebar {
+  width: 320px;
+  background-color: #f4f4f4;
+  padding: 1.5rem;
+  border-radius: 16px;
+  margin-right: 2.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  padding: 0.9rem 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar li:hover,
+.sidebar li.activo {
+  background-color: #e0f2f1;
+  color: #00796b;
+}
+
+/* Contenido principal */
+.contenido-perfil {
+  flex: 1;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.contenido-perfil h2 {
+  font-size: 1.6rem;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+}
+
+/* Formulario perfil */
+.formulario-perfil {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.formulario-perfil .campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario-perfil label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #555;
+}
+
+.formulario-perfil input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fdfdfd;
+}
+
+/* Botones */
+.acciones-usuario {
+  text-align: right;
+}
+
+.acciones-usuario button {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
+}
+
+.acciones-usuario .guardar {
+  background-color: #43a047;
+  color: white;
+}
+
+.acciones-usuario .cancelar {
+  background-color: #ddd;
+  color: #333;
+}
+
+/* Calificaciones */
+.lista-calificaciones {
+  list-style: none;
+  padding-left: 0;
+}
+
+.lista-calificaciones li {
+  background-color: #e8f5e9;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #43a047;
+  border-radius: 6px;
+}
+
+.campo-grande {
+  margin-bottom: 2rem;
+}
+
+/* Inputs con icono para contraseñas */
+.input-con-icono {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  background: white;
+  transition: border-color 0.3s ease;
+}
+
+.input-con-icono input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  padding: 0.5rem 0;
+}
+
+.input-con-icono button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  margin-left: 0.5rem;
+}
+
+.input-con-icono.valida {
+  border-color: #4caf50;
+}
+
+.input-con-icono.invalida {
+  border-color: #e53935;
+}
+
+.barra-fuerza {
+  width: 100%;
+  height: 6px;
+  background: #eee;
+  border-radius: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.avance {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.avance.debil {
+  background: #e53935;
+}
+
+.avance.media {
+  background: #fbc02d;
+}
+
+.avance.fuerte {
+  background: #43a047;
+}
+
+/* Eliminar cuenta */
+.eliminar-cuenta {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background-color: #ffebee;
+  border-left: 6px solid #c62828;
+  border-radius: 10px;
+  color: #c62828;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.eliminar-cuenta h3 {
+  font-size: 1.3rem;
+  color: #b71c1c;
+  margin-bottom: 0.5rem;
+}
+
+.eliminar-cuenta button {
+  background-color: #c62828;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.eliminar-cuenta button:hover {
+  background-color: #b71c1c;
+}
+
+.seccion-eliminar {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.boton-eliminar {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boton-eliminar:hover {
+  background-color: #c62828;
+}
+
+/* 🟢 NUEVO: Tarjetas del historial de publicaciones */
+.publicaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.tarjeta-publicacion {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.tarjeta-publicacion:hover {
+  transform: scale(1.015);
+}
+
+.tarjeta-publicacion img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+}
+
+.tarjeta-publicacion h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.tarjeta-publicacion p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0.2rem 0;
+}
+
+.tarjeta-publicacion .fecha {
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+.publicaciones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.tarjeta-publicacion {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1rem;
+  background: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.tarjeta-publicacion:hover {
+  transform: scale(1.015);
+}
+
+.tarjeta-publicacion img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+}
+
+.tarjeta-publicacion h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.tarjeta-publicacion p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0.2rem 0;
+}
+
+.tarjeta-publicacion .fecha {
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* 🛡️ HISTORIAL DE MODERACIÓN */
+.moderacion-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.moderacion-item {
+  border-left: 5px solid #00796b;
+  background-color: #e0f2f1;
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.moderacion-item p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.link-perfil {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: #00796b;
+  text-decoration: underline;
+  font-weight: 500;
+}

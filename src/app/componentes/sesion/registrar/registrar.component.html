@@ -1,0 +1,178 @@
+<div class="max-w-xl mx-auto mt-10 p-8 mb-20 bg-white rounded-xl shadow-md border border-gray-200">
+  <h2 class="text-2xl font-bold text-center text-green-700 mb-6">Crea tu cuenta en Ropero UNACH</h2>
+
+  <p class="text-sm text-gray-600 text-center mb-6">
+    <strong>Usa tu correo institucional</strong> (&#64;unach.cl o &#64;alu.unach.cl)
+  </p>
+
+  <form (ngSubmit)="registrarUsuario()" #registroForm="ngForm" [ngClass]="{'was-submitted': registroForm.submitted}" novalidate class="space-y-4">
+
+    <!-- Correo -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Correo institucional</label>
+      <input type="email" name="correo" [(ngModel)]="usuario.correo" #correo="ngModel" required
+        [class.border-red-500]="correo.invalid && (correo.touched || registroForm.submitted)"
+        [class.border-green-500]="correo.valid && (correo.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" placeholder="ejemplo@unach.cl" autocomplete="email" />
+      <p *ngIf="correo.invalid && (correo.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        Ingresa un correo institucional válido.
+      </p>
+    </div>
+
+    <!-- Nombre -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Nombre</label>
+      <input type="text" name="nombre" [(ngModel)]="usuario.nombre" #nombre="ngModel" required
+        [class.border-red-500]="nombre.invalid && (nombre.touched || registroForm.submitted)"
+        [class.border-green-500]="nombre.valid && (nombre.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" />
+      <p *ngIf="nombre.invalid && (nombre.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        El nombre es obligatorio.
+      </p>
+    </div>
+
+    <!-- Apellidos -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Apellidos</label>
+      <input type="text" name="apellidos" [(ngModel)]="usuario.apellidos" #apellidos="ngModel" required
+        [class.border-red-500]="apellidos.invalid && (apellidos.touched || registroForm.submitted)"
+        [class.border-green-500]="apellidos.valid && (apellidos.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" />
+      <p *ngIf="apellidos.invalid && (apellidos.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        Los apellidos son obligatorios.
+      </p>
+    </div>
+
+    <!-- RUT -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">RUT</label>
+      <p class="text-sm text-gray-500 mt-1">Ej: <strong>12.345.678-9</strong></p>
+      <input type="text" name="rut" [(ngModel)]="usuario.rut" #rut="ngModel" required
+        [class.border-red-500]="rut.invalid && (rut.touched || registroForm.submitted)"
+        [class.border-green-500]="rut.valid && (rut.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" placeholder="12.345.678-9" />
+      <p *ngIf="rut.invalid && (rut.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        El RUT es obligatorio y debe tener formato válido.
+      </p>
+    </div>
+
+    <!-- Celular -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Celular</label>
+      <input type="tel" name="celular" [(ngModel)]="usuario.celular" #celular="ngModel" required
+        [class.border-red-500]="celular.invalid && (celular.touched || registroForm.submitted)"
+        [class.border-green-500]="celular.valid && (celular.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" placeholder="Ej: +56 9 1234 5678" autocomplete="tel" />
+      <p *ngIf="celular.invalid && (celular.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        El celular es obligatorio.
+      </p>
+    </div>
+
+    <!-- Fecha nacimiento -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Fecha de nacimiento</label>
+      <input type="date" name="fechaNacimiento" [(ngModel)]="usuario.fechaNacimiento" #fechaNacimiento="ngModel" required
+        [max]="fechaMaxima"
+        [class.border-red-500]="fechaNacimiento.invalid && (fechaNacimiento.touched || registroForm.submitted)"
+        [class.border-green-500]="fechaNacimiento.valid && (fechaNacimiento.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" />
+      <p *ngIf="fechaNacimiento.invalid && (fechaNacimiento.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        La fecha es obligatoria.
+      </p>
+    </div>
+
+    <!-- Contraseña -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+      <div class="relative">
+        <input [type]="verPassword ? 'text' : 'password'" name="password" [(ngModel)]="usuario.password" #password="ngModel" required minlength="8"
+          [class.border-red-500]="password.invalid && (password.touched || registroForm.submitted)"
+          [class.border-green-500]="password.valid && (password.touched || registroForm.submitted)"
+          class="w-full border rounded px-3 py-2 pr-10" />
+        <button type="button" (click)="toggleVerPassword()" class="absolute inset-y-0 right-0 px-3 text-lg text-gray-500 hover:text-green-600">
+          {{ verPassword ? '🙈' : '👁️' }}
+        </button>
+      </div>
+      <div class="h-2 bg-gray-200 rounded mt-1">
+        <div [ngStyle]="{
+          width: (passwordStrength * 25) + '%',
+          background: passwordStrength >= 3 ? '#38a169' : '#e53e3e'
+        }" class="h-2 rounded transition-all"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-1">
+        Mínimo 8 caracteres, una mayúscula, un número y sin espacios.
+      </p>
+    </div>
+
+    <!-- Repetir contraseña -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Repetir contraseña</label>
+      <div class="relative">
+        <input [type]="verRepetir ? 'text' : 'password'" name="repetirPassword" [(ngModel)]="usuario.repetirPassword" #repetirPassword="ngModel" required
+          [class.border-red-500]="(usuario.repetirPassword && usuario.password !== usuario.repetirPassword && (repetirPassword.touched || registroForm.submitted))"
+          [class.border-green-500]="(usuario.repetirPassword && usuario.password === usuario.repetirPassword)"
+          class="w-full border rounded px-3 py-2 pr-10" />
+        <button type="button" (click)="toggleVerRepetir()" class="absolute inset-y-0 right-0 px-3 text-lg text-gray-500 hover:text-green-600">
+          {{ verRepetir ? '🙈' : '👁️' }}
+        </button>
+      </div>
+      <p *ngIf="usuario.repetirPassword && usuario.password !== usuario.repetirPassword && (repetirPassword.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        Las contraseñas no coinciden.
+      </p>
+    </div>
+
+    <!-- Tipo de usuario -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Tipo de usuario</label>
+      <select name="tipo" [(ngModel)]="usuario.tipo" #tipo="ngModel" required
+        [class.border-red-500]="tipo.invalid && (tipo.touched || registroForm.submitted)"
+        [class.border-green-500]="tipo.valid && (tipo.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2">
+        <option value="estudiante">Estudiante</option>
+        <option value="funcionario">Funcionario</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <p *ngIf="tipo.invalid && (tipo.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        Selecciona el tipo de usuario.
+      </p>
+    </div>
+
+    <!-- Clave secreta solo si elige admin -->
+    <div *ngIf="usuario.tipo === 'admin'">
+      <label class="block text-sm font-medium text-gray-700">Clave secreta de administrador</label>
+      <input type="password" name="claveAdmin" [(ngModel)]="claveAdmin" #claveAdminInput="ngModel" required
+        [class.border-red-500]="claveAdminInput.invalid && (claveAdminInput.touched || registroForm.submitted)"
+        class="w-full border rounded px-3 py-2" placeholder="Ingresa la clave secreta" />
+      <p *ngIf="claveAdminInput.invalid && (claveAdminInput.touched || registroForm.submitted)" class="text-red-500 text-sm mt-1">
+        La clave secreta es obligatoria.
+      </p>
+    </div>
+
+    <!-- Términos y condiciones -->
+    <div class="flex items-center space-x-2 mt-4">
+      <input type="checkbox" [(ngModel)]="aceptaTerminos" name="terminos" required class="accent-green-600">
+      <label class="text-sm text-gray-700">
+        Acepto los <a href="#" class="text-green-600 hover:underline">términos y condiciones</a>
+      </label>
+    </div>
+
+    <!-- Botón -->
+    <div class="text-center pt-4">
+      <button type="submit" [disabled]="!registroForm.valid || !aceptaTerminos"
+        class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded hover:bg-green-700 transition duration-200">
+        Registrarse
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- MODAL DE MENSAJES ESTILO UNIFICADO -->
+<div *ngIf="mostrarModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="modal-content animate-fade-in">
+    <button (click)="cerrarModal()" class="close-btn">×</button>
+    <h2 class="modal-title">{{ tituloModal }}</h2>
+    <p class="modal-text" [innerHTML]="mensajeModal"></p>
+    <button (click)="cerrarModal()" class="bg-green-600 text-white w-full">Aceptar</button>
+  </div>
+</div>

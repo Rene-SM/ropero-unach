@@ -1,0 +1,36 @@
+<div *ngIf="perfil" class="perfil-publico-container">
+  <div class="card-perfil">
+    <!-- ENCABEZADO -->
+    <h2 class="nombre-usuario">{{ perfil.usuario.nombre }} {{ perfil.usuario.apellidos }}</h2>
+    <p class="rut">RUT: {{ perfil.usuario.rut }}</p>
+
+    <!-- CALIFICACIONES -->
+    <div class="bloque">
+      <h3>Calificaciones</h3>
+      <ng-container *ngIf="perfil.promedio; else sinCalificaciones">
+        <p class="promedio">Promedio: {{ perfil.promedio }} ⭐</p>
+        <p>Total: {{ perfil.total }} evaluaciones</p>
+      </ng-container>
+      <ng-template #sinCalificaciones>
+        <p>Este usuario aún no tiene calificaciones.</p>
+      </ng-template>
+    </div>
+
+    <!-- TRANSACCIONES -->
+    <div class="bloque">
+      <h3>Transacciones realizadas</h3>
+      <p>{{ perfil.transacciones }} transacciones</p>
+    </div>
+
+    <!-- COMENTARIOS -->
+    <div class="bloque" *ngIf="perfil.calificaciones.length > 0">
+      <h3>Comentarios recibidos</h3>
+      <ul class="lista-comentarios">
+        <li *ngFor="let cal of perfil.calificaciones">
+          <strong>{{ cal.nombre_calificador }}</strong> - {{ cal.puntaje }}⭐
+          <p>{{ cal.comentario }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

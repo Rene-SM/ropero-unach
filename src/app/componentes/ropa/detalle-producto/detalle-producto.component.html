@@ -1,0 +1,33 @@
+<div class="detalle-container" *ngIf="producto">
+  <div class="detalle-img">
+    <div class="imagen-wrapper">
+      <button class="nav-btn izquierda" (click)="anteriorImagen()">&#10094;</button>
+      <img [src]="'http://localhost:3000/' + imagenSeleccionada" alt="Imagen principal" class="imagen-principal" />
+      <button class="nav-btn derecha" (click)="siguienteImagen()">&#10095;</button>
+    </div>
+
+    <div class="miniaturas">
+      <img *ngFor="let img of producto.imagenes"
+           [src]="'http://localhost:3000/' + img"
+           alt="Miniatura"
+           [class.activa]="img === imagenSeleccionada"
+           (click)="cambiarImagen(img)" />
+    </div>
+  </div>
+
+  <div class="detalle-info">
+    <h2>{{ producto.nombre }}</h2>
+    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+    <p><strong>Estado:</strong> {{ producto.estado }}</p>
+    <p><strong>Tipo de operación:</strong> {{ producto.tipo_operacion }}</p>
+
+    <p *ngIf="producto.tipo_categoria"><strong>Categoría:</strong> {{ producto.tipo_categoria }}</p>
+    <p *ngIf="producto.subcategoria"><strong>Subcategoría:</strong> {{ producto.subcategoria }}</p>
+    <p *ngIf="producto.tipo_donacion"><strong>Donación:</strong> {{ producto.tipo_donacion }}</p>
+
+    <p *ngIf="producto.tipo_operacion === 'vender'"><strong>Precio:</strong> ${{ producto.precio | number:'1.0-0' }}</p>
+    <p><strong>Talla:</strong> {{ producto.talla || 'No especificada' }}</p>
+
+    <button class="solicitar-btn">Iniciar conversación</button>
+  </div>
+</div>

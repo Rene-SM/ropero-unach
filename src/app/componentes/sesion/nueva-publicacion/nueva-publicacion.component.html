@@ -1,0 +1,159 @@
+<div class="form-container">
+  <!-- Título -->
+  <label for="titulo">Título del producto</label>
+  <mat-form-field appearance="outline">
+    <input matInput id="titulo" placeholder="Ej: Chaqueta de mezclilla" [(ngModel)]="publicacion.titulo">
+  </mat-form-field>
+
+  <!-- Estado del producto -->
+  <label>Estado del producto:</label>
+  <mat-radio-group [(ngModel)]="publicacion.estado" class="radio-group">
+    <mat-radio-button value="nuevo">Nuevo</mat-radio-button>
+    <mat-radio-button value="semi_nuevo">Semi nuevo</mat-radio-button>
+    <mat-radio-button value="usado">Usado</mat-radio-button>
+  </mat-radio-group>
+
+  <!-- Descripción -->
+  <label for="descripcion">Descripción del producto</label>
+  <mat-form-field appearance="outline">
+    <textarea matInput id="descripcion" rows="4" [(ngModel)]="publicacion.descripcion"></textarea>
+  </mat-form-field>
+
+  <!-- Cantidad disponible -->
+  <label for="cantidad">Cantidad disponible</label>
+  <mat-form-field appearance="outline">
+    <input
+      matInput
+      id="cantidad"
+      type="number"
+      min="1"
+      [(ngModel)]="publicacion.cantidad"
+      placeholder="Ej: 1, 2, 3..."
+    >
+  </mat-form-field>
+
+  <!-- Tipo de operación -->
+  <label>¿Qué deseas hacer con este producto?</label>
+  <mat-radio-group [(ngModel)]="publicacion.tipoOperacion" class="radio-group">
+    <mat-radio-button value="Permutar">Permutar</mat-radio-button>
+    <mat-radio-button value="Vender">Vender</mat-radio-button>
+    <mat-radio-button value="donar">Donar</mat-radio-button>
+  </mat-radio-group>
+
+  <!-- Precio del producto -->
+  <div *ngIf="publicacion.tipoOperacion === 'Vender'">
+    <label for="precio">Precio del producto</label>
+    <mat-form-field appearance="outline">
+      <span matPrefix class="moneda-prefix">$</span>
+      <input
+        matInput
+        id="precio"
+        type="text"
+        name="precio"
+        [(ngModel)]="precioFormateado"
+        (input)="formatearPrecio($event)"
+        (keypress)="soloNumeros($event)"
+        (paste)="evitarPegadoInvalido($event)"
+        placeholder="Ej: 12000"
+      >
+    </mat-form-field>
+  </div>
+
+  <!-- Donación -->
+  <div *ngIf="publicacion.tipoOperacion === 'donar'">
+    <label>¿A quién deseas donar?</label>
+    <mat-radio-group [(ngModel)]="publicacion.tipoDonacion" class="radio-group">
+      <mat-radio-button value="Comunidad">Donar a la comunidad</mat-radio-button>
+      <mat-radio-button value="Agrupaciones">Donar a agrupaciones</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <!-- CATEGORÍA -->
+  <div *ngIf="publicacion.tipoOperacion">
+    <label>Categoría principal:</label>
+    <mat-radio-group [(ngModel)]="publicacion.categoriaGeneral" class="radio-group">
+      <mat-radio-button *ngFor="let cat of categoriasGenerales" [value]="cat">
+        {{ cat }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <div *ngIf="publicacion.categoriaGeneral">
+      <label>Subcategoría:</label>
+      <mat-radio-group [(ngModel)]="publicacion.subcategoria" class="radio-group">
+        <mat-radio-button *ngFor="let sub of subcategorias[publicacion.categoriaGeneral]" [value]="sub">
+          {{ sub }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <!-- TALLA estándar -->
+  <div *ngIf="debeMostrarTallaGeneral()">
+    <label>Talla:</label>
+    <mat-radio-group [(ngModel)]="publicacion.talla" class="tallas-radio-group">
+      <mat-radio-button class="talla-btn" value="XS">XS</mat-radio-button>
+      <mat-radio-button class="talla-btn" value="S">S</mat-radio-button>
+      <mat-radio-button class="talla-btn" value="M">M</mat-radio-button>
+      <mat-radio-button class="talla-btn" value="L">L</mat-radio-button>
+      <mat-radio-button class="talla-btn" value="XL">XL</mat-radio-button>
+      <mat-radio-button class="talla-btn" value="XXL">XXL</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <!-- TALLA de calzado -->
+  <div *ngIf="debeMostrarTallaCalzado()">
+    <label>Selecciona la talla de calzado:</label>
+    <mat-radio-group [(ngModel)]="publicacion.talla" class="tallas-radio-group">
+      <mat-radio-button *ngFor="let t of tallasCalzado" [value]="t">{{ t }}</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <!-- Imágenes -->
+  <label>Agregar imágenes del producto (máx. 5)</label>
+  <div class="input-file-wrapper">
+    <button mat-stroked-button color="primary" class="custom-file-button" (click)="fileInput.click()">
+      📁 Elegir imágenes
+    </button>
+    <input
+      type="file"
+      name="imagenes"
+      #fileInput
+      multiple
+      accept="image/*"
+      (change)="onImagenesSeleccionadas($event)"
+      class="hidden-input"
+    />
+  </div>
+
+  <div class="preview-container" *ngIf="imagenes.length > 0">
+    <div class="preview-item" *ngFor="let img of imagenes; let i = index">
+      <img [src]="img.preview" alt="Imagen seleccionada">
+      <button (click)="eliminarImagen(i)">✕</button>
+    </div>
+  </div>
+
+  <!-- Botón Publicar -->
+  <button mat-raised-button class="publish-button green-button" (click)="publicar()">
+    Publicar
+  </button>
+
+  <!-- MODAL ÉXITO -->
+  <div *ngIf="mostrarModalExito" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-btn" (click)="cerrarModal()">✕</button>
+      <h2 class="modal-title">¡Producto publicado!</h2>
+      <p class="modal-text">Tu producto ha sido creado exitosamente.<br>Gracias por confiar en <strong>Ropero UNACH</strong> 🧥💚</p>
+      <button mat-raised-button color="primary" (click)="cerrarModal()" class="green-button w-full">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- MODAL ERROR -->
+  <div *ngIf="mostrarModalError" class="modal-overlay">
+    <div class="modal-content">
+      <button class="close-btn" (click)="cerrarModal()">✕</button>
+      <h2 class="modal-title text-red-600">Error en la publicación</h2>
+      <p class="modal-text">Por favor completa todos los campos obligatorios para poder publicar tu producto.</p>
+      <button mat-raised-button color="warn" (click)="cerrarModal()" class="w-full">Entendido</button>
+    </div>
+  </div>
+</div>

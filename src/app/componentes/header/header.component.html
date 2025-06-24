@@ -1,0 +1,91 @@
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <div class="flex flex-wrap items-center justify-between gap-y-2">
+
+      <!-- Logo -->
+      <div class="flex items-center space-x-6">
+        <button class="md:hidden mr-2" aria-label="Menu">
+          <!-- ÍCONO MENU SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <a routerLink="/" class="flex items-center">
+          <span class="text-2xl font-bold text-green-600">Ropero</span>
+          <span class="text-2xl font-bold text-gray-800">UNACH</span>
+        </a>
+
+        <!-- Menú Categorías -->
+        <div class="relative" (mouseover)="abrirMenuCategorias()" (mouseleave)="cerrarMenuCategorias()">
+          <button class="text-gray-700 flex items-center hover:text-green-600 h-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span class="ml-1">Categorías</span>
+          </button>
+
+          <div *ngIf="mostrarMenuCategorias" class="absolute bg-white border rounded shadow-lg mt-2 w-80 p-4 z-50">
+            <div class="flex flex-col">
+              <!-- ROPA -->
+              <a routerLink="/explorar" class="categoria-titulo clickable mb-1">Ropa</a>
+              <a routerLink="/categoria/ropa-hombre" class="subcategoria-enlace mb-2">Ropa de Hombre</a>
+              <a routerLink="/categoria/ropa-mujer" class="subcategoria-enlace mb-3">Ropa de Mujer</a>
+
+              <!-- ACCESORIOS -->
+              <a routerLink="/categoria/accesorios" class="categoria-titulo clickable mb-3">Accesorios</a>
+
+              <!-- COMUNIDAD -->
+              <h2 class="categoria-titulo mb-2">Comunidad</h2>
+              <a routerLink="/donar/comunidad" class="subcategoria-enlace">Donaciones a la Comunidad</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enlaces adicionales -->
+        <a routerLink="/donaciones" class="text-gray-700 hover:text-green-600 flex items-center py-2">Donar</a>
+        <a routerLink="/como-funciona" class="text-gray-700 hover:text-green-600 flex items-center py-2">¿Cómo funciona?</a>
+      </div>
+
+      <!-- Buscador -->
+      <div class="hidden md:flex flex-1 mx-6 relative">
+        <input type="search" placeholder="Buscar" class="w-full pl-10 pr-4 py-2 rounded-full border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"/>
+        <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
+        </svg>
+      </div>
+
+      <!-- Usuario -->
+      <div class="relative hidden sm:flex items-center space-x-2 cursor-pointer" (mouseover)="abrirMenuUsuario()" (mouseleave)="cerrarMenuUsuario()">
+        <!-- ÍCONO USER SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4 -4 1.79-4 4 1.79 4 4 4z" />
+          <path d="M4 20v-1a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v1" />
+        </svg>
+
+        <div class="flex flex-col">
+          <span class="text-xs text-gray-500">Hola,</span>
+          <span class="text-sm font-medium text-green-600 hover:text-green-700">{{ usuarioAutenticado ? nombreUsuario : 'Inicia sesión▾' }}</span>
+        </div>
+
+        <div *ngIf="mostrarMenuUsuario" class="absolute top-full left-0 mt-2 w-48 bg-white border rounded shadow-md transition-opacity z-50">
+          <button *ngIf="!usuarioAutenticado" (click)="abrirModalDesdeHeader()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Inicia sesión</button>
+          <a *ngIf="!usuarioAutenticado" routerLink="/registro" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Regístrate</a>
+          <a *ngIf="usuarioAutenticado" routerLink="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Perfil</a>
+          <a *ngIf="usuarioAutenticado" routerLink="/nueva-publicacion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Nueva publicación</a>
+          <button *ngIf="usuarioAutenticado" (click)="cerrarSesion()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <!-- Componente Login oculto -->
+      <app-inicio-sesion #loginComponent></app-inicio-sesion>
+
+      <!-- Conversaciones -->
+      <a *ngIf="usuarioAutenticado" routerLink="/conversaciones" class="hidden sm:flex items-center text-gray-700 hover:text-green-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z" />
+        </svg>
+        <span class="text-sm">Mis conversaciones</span>
+      </a>
+    </div>
+  </div>
+</header>

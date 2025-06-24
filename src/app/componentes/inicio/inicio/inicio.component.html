@@ -1,0 +1,128 @@
+<!-- Hero Section -->
+<section class="bg-gradient-to-r from-green-50 to-blue-50 py-24">
+  <div class="container mx-auto px-4 flex flex-col items-center justify-center text-center gap-6">
+    <h1 class="text-4xl md:text-6xl font-bold text-gray-800">
+      Reutilizar es <span class="text-green-600">cuidar el planeta</span>
+    </h1>
+    <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+      Al darle una segunda vida a la ropa, reducimos el desperdicio textil y contribuimos a un futuro más
+      sostenible para nuestra comunidad universitaria.
+    </p>
+
+    <!-- Call-to-Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4">
+      <a routerLink="/explorar" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+        Explorar Ropa
+      </a>
+      <a routerLink="/donar" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z" />
+        </svg>
+        Donar
+      </a>
+      <a routerLink="/como-funciona" class="btn-primary">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5 w-5" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 1 1 5.83 1c0 2-3 3-3 3" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        ¿Cómo funciona?
+      </a>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl w-full">
+      <div class="text-center">
+        <div class="text-3xl font-bold text-green-600">500+</div>
+        <div class="text-sm text-gray-600">Prendas disponibles</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-green-600">200+</div>
+        <div class="text-sm text-gray-600">Estudiantes beneficiados</div>
+      </div>
+      <div class="text-center">
+        <div class="text-3xl font-bold text-green-600">1.2T</div>
+        <div class="text-sm text-gray-600">CO₂ ahorrado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <div class="text-center py-8 px-4 bg-gradient-to-r from-[#f0fdf4] via-[#f0fdfc] to-[#ecfdf5] border-y border-green-200">
+      <h2 class="mensaje-rotativo text-xl md:text-2xl font-semibold text-green-700 transition-all duration-500">
+        {{ fraseActual }}
+      </h2>
+    </div>
+
+<!-- Categorías Destacadas -->
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12 max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Explora nuestras categorías</h2>
+      <p class="text-lg text-gray-600">
+        Encuentra exactamente lo que necesitas en nuestra amplia selección de ropa y accesorios
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+      <!-- Ropa de Hombre -->
+      <a routerLink="/categoria/ropa-hombre" class="categoria-card azul">
+        <div class="icono-categoria bg-blue-100 text-blue-600">
+          <svg class="h-10 w-10 text-blue-600" viewBox="0 0 64 64" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="12" r="6" />
+            <path d="M20 52 L32 20 L44 52 Z" />
+          </svg>
+        </div>
+        <h3>Ropa de Hombre</h3>
+        <p>Camisas, pantalones, chaquetas y más para el guardarropa masculino</p>
+        <div class="etiquetas">
+          <span>Casual</span><span>Formal</span><span>Deportiva</span>
+        </div>
+      </a>
+
+      <!-- Ropa de Mujer -->
+      <a routerLink="/categoria/ropa-mujer" class="categoria-card rosado">
+        <div class="icono-categoria bg-pink-100 text-pink-600">
+          <svg class="h-10 w-10 text-pink-600" viewBox="0 0 64 64" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="12" r="6" />
+            <path d="M20 20 L32 52 L44 20 Z" />
+          </svg>
+        </div>
+        <h3>Ropa de Mujer</h3>
+        <p>Vestidos, blusas, faldas y prendas para todos los estilos femeninos</p>
+        <div class="etiquetas">
+          <span>Casual</span><span>Formal</span><span>Deportiva</span>
+        </div>
+      </a>
+
+      <!-- Accesorios -->
+      <a routerLink="/categoria/accesorios" class="categoria-card naranja">
+        <div class="icono-categoria bg-orange-100 text-orange-600">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </div>
+        <h3>Accesorios</h3>
+        <p>Bolsos, carteras, joyería y complementos para tu estilo personal</p>
+        <div class="etiquetas">
+          <span>Calzado</span><span>Joyería</span><span>Maquillaje</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>

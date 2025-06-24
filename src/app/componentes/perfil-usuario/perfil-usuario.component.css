@@ -1,0 +1,66 @@
+.perfil-publico-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.card-perfil {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.nombre-usuario {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 4px;
+}
+
+.rut {
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 20px;
+}
+
+.bloque {
+  margin-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.bloque h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #2d3748;
+}
+
+.promedio {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2b6cb0;
+}
+
+.lista-comentarios {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.lista-comentarios li {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.lista-comentarios p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #4a5568;
+}

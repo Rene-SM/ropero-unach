@@ -2,6 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "src",                    // ✅ AGREGADO
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,

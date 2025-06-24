@@ -1,0 +1,47 @@
+<div class="conversaciones-container">
+  <!-- Panel Izquierdo -->
+  <div class="panel-izquierdo">
+    <h2 class="titulo-panel">Mensajes</h2>
+    <div *ngFor="let conv of conversaciones" (click)="abrirConversacion(conv.receptor)" class="contacto"
+         [class.activo]="usuarioActivo?.id_usuario === conv.receptor.id_usuario">
+      <img [src]="conv.receptor.imagen || 'assets/default-user.png'" class="avatar" alt="Avatar">
+      <div class="info">
+        <p class="nombre">{{ conv.receptor.nombre }}</p>
+        <p class="preview">{{ conv.ultimoMensaje?.contenido || 'Haz clic para iniciar conversación' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel Derecho: Conversación activa -->
+  <div class="panel-derecho" *ngIf="usuarioActivo">
+    <div class="encabezado-chat">
+      <p class="nombre-usuario">{{ usuarioActivo.nombre }}</p>
+    </div>
+
+    <div class="mensajes">
+      <div *ngFor="let msg of mensajes" [class.propio]="msg.esPropio" class="mensaje-burbuja">
+        <ng-container *ngIf="esImagen(msg.contenido); else textoMsg">
+          <img [src]="'http://localhost:3000/uploads/chat/' + msg.contenido" alt="imagen" class="imagen-chat" />
+        </ng-container>
+        <ng-template #textoMsg>
+          <span>{{ msg.contenido }}</span>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="input-mensaje">
+      <input type="text" [(ngModel)]="mensaje" placeholder="Escribe tu mensaje..." (keydown.enter)="enviarMensaje()" />
+      <input type="file" accept="image/*" (change)="seleccionarImagen($event)" class="ml-2" />
+      <button (click)="enviarMensaje()">📨</button>
+      <button *ngIf="imagenSeleccionada" (click)="enviarImagen()" class="ml-2">📷</button>
+    </div>
+  </div>
+
+  <!-- Panel derecho vacío -->
+  <div class="panel-derecho" *ngIf="!usuarioActivo">
+    <div class="centro-vacio">
+      <p class="icono">💬</p>
+      <p class="texto">Selecciona un contacto para comenzar a chatear</p>
+    </div>
+  </div>
+</div>

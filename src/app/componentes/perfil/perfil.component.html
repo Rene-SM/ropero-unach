@@ -1,0 +1,142 @@
+<div class="perfil-layout" *ngIf="usuario">
+  <!-- Barra lateral -->
+  <aside class="sidebar">
+    <ul>
+      <li [class.activo]="modo === 'datos'" (click)="modo = 'datos'">👤 Datos personales</li>
+      <li [class.activo]="modo === 'calificaciones'" (click)="modo = 'calificaciones'">⭐ Calificaciones</li>
+      <li [class.activo]="modo === 'password'" (click)="modo = 'password'">🔒 Cambiar contraseña</li>
+      <li [class.activo]="modo === 'publicaciones'" (click)="modo = 'publicaciones'">📦 Historial de publicaciones</li>
+      <li [class.activo]="modo === 'compras'" (click)="modo = 'compras'">🛍 Historial de compras</li>
+      <!-- ✅ Nuevo solo para admin -->
+      <li *ngIf="usuario?.tipo === 'admin'" [class.activo]="modo === 'moderacion'" (click)="modo = 'moderacion'">🛡️ Historial de moderación</li>
+    </ul>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="contenido-perfil">
+
+    <!-- DATOS PERSONALES -->
+    <div *ngIf="modo === 'datos'">
+      <h2>Datos personales</h2>
+      <div class="formulario-perfil">
+        <div class="campo"><label>Nombre</label><input [(ngModel)]="usuarioEditado.nombre" [disabled]="!editando" /></div>
+        <div class="campo"><label>Apellidos</label><input [(ngModel)]="usuarioEditado.apellidos" [disabled]="!editando" /></div>
+        <div class="campo"><label>RUT</label><input [value]="usuario.rut" disabled /></div>
+        <div class="campo"><label>Celular</label><input [(ngModel)]="usuarioEditado.celular" [disabled]="!editando" /></div>
+        <div class="campo"><label>Correo electrónico</label><input [value]="usuario.correo" disabled /></div>
+      </div>
+      <div class="acciones-usuario">
+        <button *ngIf="!editando" (click)="habilitarEdicion()">✏️ Editar</button>
+        <div *ngIf="editando">
+          <button class="guardar" (click)="guardarCambios()">Guardar</button>
+          <button class="cancelar" (click)="editando = false">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALIFICACIONES -->
+    <div *ngIf="modo === 'calificaciones'">
+      <h2>Calificaciones recibidas</h2>
+      <p *ngIf="promedio !== null"><strong>Promedio:</strong> {{ promedio }} / 5</p>
+      <p *ngIf="promedio === null">Sin calificaciones aún</p>
+      <ul class="lista-calificaciones">
+        <li *ngFor="let cal of calificaciones">
+          <strong>{{ cal.tipo_calificacion }}:</strong> {{ cal.puntuacion }}/5<br />
+          <em>{{ cal.comentario }}</em><br />
+          <small>{{ cal.fecha | date: 'medium' }}</small>
+        </li>
+      </ul>
+    </div>
+
+    <!-- CAMBIAR CONTRASEÑA -->
+    <div *ngIf="modo === 'password'">
+      <h2>Cambiar contraseña</h2>
+      <div class="formulario-perfil" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <div class="campo-grande">
+          <label>Contraseña actual</label>
+          <div class="input-con-icono">
+            <input [type]="mostrarActual ? 'text' : 'password'" [(ngModel)]="contrasenaActual" placeholder="Ingresa tu contraseña actual" />
+            <button (click)="mostrarActual = !mostrarActual" type="button">{{ mostrarActual ? '🙈' : '👁️' }}</button>
+          </div>
+        </div>
+
+        <div class="campo-grande">
+          <label>Nueva contraseña</label>
+          <div class="input-con-icono" [ngClass]="{
+            valida: nuevaContrasena && validarContrasena(),
+            invalida: nuevaContrasena && !validarContrasena()
+          }">
+            <input [type]="mostrarNueva ? 'text' : 'password'" [(ngModel)]="nuevaContrasena" placeholder="Nueva contraseña" />
+            <button (click)="mostrarNueva = !mostrarNueva" type="button">{{ mostrarNueva ? '🙈' : '👁️' }}</button>
+          </div>
+          <div class="barra-fuerza" *ngIf="nuevaContrasena">
+            <div class="avance" [ngClass]="getFuerzaClase()" [style.width.%]="getFuerzaPorcentaje()"></div>
+          </div>
+          <small class="text-xs text-gray-500">Mínimo 8 caracteres, una mayúscula, un número y sin espacios.</small>
+        </div>
+
+        <div class="campo-grande">
+          <label>Repetir contraseña</label>
+          <div class="input-con-icono" [ngClass]="{
+            valida: repetirContrasena && nuevaContrasena === repetirContrasena,
+            invalida: repetirContrasena && nuevaContrasena !== repetirContrasena
+          }">
+            <input [type]="mostrarRepetir ? 'text' : 'password'" [(ngModel)]="repetirContrasena" placeholder="Repite tu nueva contraseña" />
+            <button (click)="mostrarRepetir = !mostrarRepetir" type="button">{{ mostrarRepetir ? '🙈' : '👁️' }}</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="acciones-usuario" style="display: flex; justify-content: space-between; margin-top: 2rem;">
+        <button class="guardar" [disabled]="!validarContrasena() || nuevaContrasena !== repetirContrasena" (click)="cambiarContrasena()">Cambiar contraseña</button>
+        <button class="boton-eliminar" style="background-color: #e53935; color: white;" (click)="confirmarEliminacion()">🗑️ Eliminar cuenta</button>
+      </div>
+    </div>
+
+    <!-- HISTORIAL DE PUBLICACIONES -->
+    <div *ngIf="modo === 'publicaciones'">
+      <h2>📦 Historial de publicaciones</h2>
+
+      <div *ngIf="historialPublicaciones.length === 0">
+        <p>No has publicado ningún producto aún.</p>
+      </div>
+
+      <div class="publicaciones-grid" *ngIf="historialPublicaciones.length > 0">
+        <div class="tarjeta-publicacion" *ngFor="let pub of historialPublicaciones">
+          <img [src]="pub.imagenes?.[0]?.url || 'assets/placeholder.png'" alt="Producto" />
+          <h3>{{ pub.nombre }}</h3>
+          <p><strong>Estado:</strong> {{ pub.estado }}</p>
+          <p><strong>Operación:</strong> {{ pub.tipo_operacion }}</p>
+          <p><strong>Talla:</strong> {{ pub.talla || 'No aplica' }}</p>
+          <p class="fecha">{{ pub.fecha_publicacion | date:'short' }}</p>
+        </div>
+      </div>
+    </div>  
+
+    <!-- HISTORIAL DE COMPRAS -->
+    <div *ngIf="modo === 'compras'">
+      <h2>🛍 Historial de compras</h2>
+      <p>Próximamente se mostrarán tus compras realizadas aquí.</p>
+    </div>
+
+ <!-- 🛡️ HISTORIAL DE MODERACIÓN -->
+<div *ngIf="modo === 'moderacion'">
+  <h2>🛡️ Historial de moderación</h2>
+
+  <div *ngIf="historialModeracion?.length === 0">
+    <p>No hay productos eliminados registrados aún.</p>
+  </div>
+
+  <div class="moderacion-lista" *ngIf="historialModeracion && historialModeracion.length > 0">
+    <div class="moderacion-item" *ngFor="let item of historialModeracion">
+      <p><strong>🧺 Producto eliminado:</strong> {{ item.nombre_producto }}</p>
+      <p><strong>👤 Usuario afectado:</strong> {{ item.nombre }} {{ item.apellidos }}</p>
+      <p><strong>📅 Fecha:</strong> {{ item.fecha_eliminacion | date:'medium' }}</p>
+      <a [routerLink]="['/perfil-publico', item.id_usuario]" class="link-perfil">
+        🔗 Ver perfil del usuario
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="contenedor-ropa">
+  <aside class="filtros">
+    <h2>Accesorios</h2>
+
+    <br>
+
+    <!-- Filtro por subcategoría -->
+    <p><strong>Subcategoría:</strong></p>
+    <button [class.activo]="filtroSubcategoria === ''" (click)="aplicarFiltroSubcategoria('')">Ver Todo</button>
+    <button [class.activo]="filtroSubcategoria === 'Calzado'" (click)="aplicarFiltroSubcategoria('Calzado')">Calzado</button>
+    <button [class.activo]="filtroSubcategoria === 'Joyería'" (click)="aplicarFiltroSubcategoria('Joyería')">Joyería</button>
+    <button [class.activo]="filtroSubcategoria === 'Maquillaje'" (click)="aplicarFiltroSubcategoria('Maquillaje')">Maquillaje</button>
+
+    <br>
+
+    <!-- Filtro por estado -->
+    <p><strong>Estado del producto:</strong></p>
+    <button [class.activo]="filtroEstado === ''" (click)="aplicarFiltroEstado('')">Ver Todo</button>
+    <button [class.activo]="filtroEstado === 'nuevo'" (click)="aplicarFiltroEstado('nuevo')">Nuevo</button>
+    <button [class.activo]="filtroEstado === 'semi_nuevo'" (click)="aplicarFiltroEstado('semi_nuevo')">Semi nuevo</button>
+    <button [class.activo]="filtroEstado === 'usado'" (click)="aplicarFiltroEstado('usado')">Usado</button>
+
+    <br>
+
+    <!-- Filtro por tipo de operación -->
+    <p><strong>Tipo de operación:</strong></p>
+    <button [class.activo]="filtroOperacion === ''" (click)="aplicarFiltroOperacion('')">Ver Todo</button>
+    <button [class.activo]="filtroOperacion === 'vender'" (click)="aplicarFiltroOperacion('vender')">Vender</button>
+    <button [class.activo]="filtroOperacion === 'donar'" (click)="aplicarFiltroOperacion('donar')">Donar</button>
+    <button [class.activo]="filtroOperacion === 'permutar'" (click)="aplicarFiltroOperacion('permutar')">Permutar</button>
+
+    <br>
+
+    <button (click)="limpiarFiltros()" style="margin-top: 1rem; background-color: #fee2e2; color: #b91c1c;">
+      Limpiar filtros
+    </button>
+  </aside>
+
+  <div class="contenido-derecho">
+    <div class="filtros-horizontal">
+      <label><strong>Ordenar por:</strong></label>
+      <select id="orden" [(ngModel)]="ordenSeleccionado" (change)="cambiarOrden($event)">
+        <option value="">Selecciona un criterio</option>
+        <option value="reciente">Más reciente</option>
+        <option value="antiguo">Más antiguo</option>
+        <option *ngIf="filtroOperacion === 'vender'" value="precio_asc">Precio: menor a mayor</option>
+        <option *ngIf="filtroOperacion === 'vender'" value="precio_desc">Precio: mayor a menor</option>
+      </select>
+    </div>
+
+    <section class="galeria">
+      <div *ngFor="let producto of productosFiltrados" class="tarjeta relative">
+        <!-- Botón eliminar (solo admin) -->
+        <button *ngIf="esAdmin"
+          (click)="abrirModalEliminar(producto)"
+          title="Eliminar producto"
+          class="btn-eliminar">×</button>
+
+        <img [src]="'http://localhost:3000/' + producto.imagen" alt="{{ producto.nombre }}" />
+        <h3>{{ producto.nombre }}</h3>
+        <p><strong>Estado:</strong> {{ producto.estado }}</p>
+        <p><strong>Operación:</strong> {{ producto.tipo_operacion }}</p>
+        <p *ngIf="producto.tipo_operacion === 'vender'">
+          <strong>Precio:</strong> ${{ producto.precio | number:'1.0-0' }}
+        </p>
+        <a [routerLink]="['/detalle-producto', producto.id_producto]">Ver más</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div *ngIf="mostrarModalEliminar" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-[90%] max-w-md text-center relative">
+    <div class="text-5xl text-yellow-500 mb-3">⚠️</div>
+    <h2 class="text-lg font-semibold mb-2">¿Eliminar producto?</h2>
+    <p class="text-sm text-gray-600 mb-6">
+      ¿Estás seguro de que deseas eliminar <strong>{{ productoSeleccionado?.nombre }}</strong>?<br>
+      Esta acción no se puede deshacer.
+    </p>
+    <div class="flex justify-center gap-4">
+      <button (click)="confirmarEliminacion()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+        Sí, eliminar
+      </button>
+      <button (click)="cancelarEliminacion()" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>

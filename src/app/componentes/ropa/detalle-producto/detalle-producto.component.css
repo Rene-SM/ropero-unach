@@ -1,0 +1,108 @@
+.detalle-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.detalle-img {
+  max-width: 600px;
+  flex: 1;
+}
+
+.imagen-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: #f3f3f3;
+  overflow: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagen-principal {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.nav-btn.izquierda {
+  left: 10px;
+}
+
+.nav-btn.derecha {
+  right: 10px;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.miniaturas img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.miniaturas img.activa {
+  border-color: #10b981;
+}
+
+.detalle-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.detalle-info h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.detalle-info p {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.solicitar-btn {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.solicitar-btn:hover {
+  background-color: #059669;
+}

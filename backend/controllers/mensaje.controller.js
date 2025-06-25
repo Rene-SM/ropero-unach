@@ -137,3 +137,50 @@ exports.enviarMensajeConImagen = (req, res) => {
     });
   });
 };
+
+// ✅ NUEVO MÉTODO: obtener mensajes por solicitud (modificado)
+exports.obtenerMensajesPorSolicitud = async (req, res) => {
+  const id_solicitud = req.params.id;
+
+  try {
+    const [mensajes] = await db.query(
+      `SELECT m.*, u.nombre
+       FROM Mensajes m
+       JOIN Usuario u ON u.id_usuario = m.id_emisor
+       WHERE m.id_solicitud = ?
+       ORDER BY m.fecha_envio ASC`,
+      [id_solicitud]
+    );
+
+    const [solicitud] = await db.query(
+      `SELECT s.*, 
+              p.id_usuario AS id_vendedor,
+              u1.nombre AS nombre_vendedor, u1.imagen AS imagen_vendedor,
+              u2.id_usuario AS id_comprador, u2.nombre AS nombre_comprador, u2.imagen AS imagen_comprador
+       FROM Solicitudes s
+       JOIN Productos p ON p.id_producto = s.id_producto
+       JOIN Usuario u1 ON u1.id_usuario = p.id_usuario
+       JOIN Usuario u2 ON u2.id_usuario = s.id_usuario
+       WHERE s.id_solicitud = ?`,
+      [id_solicitud]
+    );
+
+    if (solicitud.length === 0) {
+      return res.status(404).json({ mensaje: 'Solicitud no encontrada' });
+    }
+
+    const s = solicitud[0];
+
+    // ✅ Determinar cuál es el otro usuario (el receptor)
+   const receptor =
+    s.id_vendedor === usuarioAutenticado
+      ? { id_usuario: s.id_comprador, nombre: s.nombre_comprador }
+      : { id_usuario: s.id_vendedor, nombre: s.nombre_vendedor };
+
+    res.json({ mensajes, receptor });
+
+  } catch (error) {
+    console.error('❌ Error al obtener mensajes por solicitud:', error);
+    res.status(500).json({ mensaje: 'Error al obtener mensajes por solicitud' });
+  }
+};

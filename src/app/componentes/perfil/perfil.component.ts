@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // ✅ Importado para usar routerLink
+import { RouterModule, Router } from '@angular/router'; // ⬅️ Se agregó Router aquí
 import { ProductoService } from '../sesion/nueva-publicacion/producto.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule], // ✅ Añadido RouterModule
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css']
 })
@@ -31,9 +31,15 @@ export class PerfilComponent implements OnInit {
 
   historialPublicaciones: any[] = [];
   historialCompras: any[] = [];
-  historialModeracion: any[] = []; // ✅ Historial de moderación
+  historialModeracion: any[] = [];
 
-  constructor(private http: HttpClient, private productoService: ProductoService) {}
+  esAdmin: boolean = false;
+
+  constructor(
+    private http: HttpClient,
+    private productoService: ProductoService,
+    private router: Router // ✅ Agregado para navegación
+  ) {}
 
   ngOnInit(): void {
     const idUsuario = this.obtenerIdDesdeToken();
@@ -48,8 +54,9 @@ export class PerfilComponent implements OnInit {
         this.calificaciones = res.calificaciones;
         this.promedio = res.promedio_calificacion;
         this.usuarioEditado = { ...res.usuario };
+        this.esAdmin = res.usuario.tipo === 'admin';
 
-        if (this.usuario.tipo === 'admin') {
+        if (this.esAdmin) {
           this.cargarHistorialModeracion();
         }
       },
@@ -78,12 +85,8 @@ export class PerfilComponent implements OnInit {
 
   cargarHistorialModeracion(): void {
     this.productoService.obtenerHistorialModeracion().subscribe(
-      res => {
-        this.historialModeracion = res;
-      },
-      err => {
-        console.error('Error al obtener historial de moderación:', err);
-      }
+      res => this.historialModeracion = res,
+      err => console.error('Error al obtener historial de moderación:', err)
     );
   }
 
@@ -95,7 +98,7 @@ export class PerfilComponent implements OnInit {
   guardarCambios() {
     const id = this.usuario.id_usuario;
     this.http.put(`http://localhost:3000/api/usuario/${id}`, this.usuarioEditado).subscribe(
-      res => {
+      () => {
         this.usuario = { ...this.usuarioEditado };
         this.editando = false;
         Swal.fire({
@@ -119,13 +122,7 @@ export class PerfilComponent implements OnInit {
 
   validarContrasena(): boolean {
     const pwd = this.nuevaContrasena;
-    return (
-      pwd.length >= 8 &&
-      /[A-Z]/.test(pwd) &&
-      /[a-z]/.test(pwd) &&
-      /\d/.test(pwd) &&
-      !/\s/.test(pwd)
-    );
+    return pwd.length >= 8 && /[A-Z]/.test(pwd) && /[a-z]/.test(pwd) && /\d/.test(pwd) && !/\s/.test(pwd);
   }
 
   getFuerzaClase(): string {
@@ -152,7 +149,7 @@ export class PerfilComponent implements OnInit {
       contrasenaActual: this.contrasenaActual,
       nuevaContrasena: this.nuevaContrasena
     }).subscribe(
-      res => {
+      () => {
         Swal.fire({
           icon: 'success',
           title: 'Contraseña actualizada',
@@ -177,23 +174,15 @@ export class PerfilComponent implements OnInit {
 
   cargarHistorialPublicaciones(idUsuario: number) {
     this.http.get<any[]>(`http://localhost:3000/api/productos/publicaciones/${idUsuario}`).subscribe(
-      res => {
-        this.historialPublicaciones = res;
-      },
-      err => {
-        console.error('Error al obtener publicaciones:', err);
-      }
+      res => this.historialPublicaciones = res,
+      err => console.error('Error al obtener publicaciones:', err)
     );
   }
 
   cargarHistorialCompras(idUsuario: number) {
     this.http.get<any[]>(`http://localhost:3000/api/usuario/${idUsuario}/compras`).subscribe(
-      res => {
-        this.historialCompras = res;
-      },
-      err => {
-        console.error('Error al obtener compras:', err);
-      }
+      res => this.historialCompras = res,
+      err => console.error('Error al obtener compras:', err)
     );
   }
 
@@ -234,5 +223,13 @@ export class PerfilComponent implements OnInit {
         );
       }
     });
+  }
+
+  // ✅ NUEVO MÉTODO
+  verPerfilPublico() {
+     console.log('Redirigiendo al perfil público con ID:', this.usuario?.id_usuario);
+    if (this.usuario && this.usuario.id_usuario) {
+      this.router.navigate(['/perfil-publico', this.usuario.id_usuario]);
+    }
   }
 }

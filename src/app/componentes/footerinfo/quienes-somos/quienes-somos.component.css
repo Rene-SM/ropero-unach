@@ -1,0 +1,71 @@
+.quienes-container {
+  max-width: 50%;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.titulo {
+  font-size: 2.0rem;
+  font-weight: bold;
+  color: #1b5e20;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.subtitulo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2e7d32;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.texto {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  text-align: justify;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-inicio {
+  background-color: #1e88e5;
+  color: #fff;
+}
+
+.btn-verde {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.texto-centrado {
+  text-align: center;
+  margin-top: -8px;
+}

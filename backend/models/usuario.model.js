@@ -35,10 +35,13 @@ const Usuario = {
   buscarPorCorreo: (correo, callback) => {
     const sql = 'SELECT * FROM Usuario WHERE correo = ?';
     ejecutar(sql, [correo], callback);
-  }
+  },
 
-  // Podrías agregar aquí funciones como:
-  // buscarPorId: (id, cb) => { ... }
+  // 🔍 Buscar usuario por RUT (para verificación)
+  buscarPorRut: (rut, callback) => {
+    const sql = 'SELECT * FROM Usuario WHERE rut = ?';
+    ejecutar(sql, [rut], callback);
+  }
 };
 
 module.exports = Usuario;

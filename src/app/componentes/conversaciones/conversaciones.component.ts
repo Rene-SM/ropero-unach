@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConversacionService } from './conversacion.service';
 import { io } from 'socket.io-client';
+import { ActivatedRoute } from '@angular/router'; // ✅ agregado
 
 @Component({
   selector: 'app-conversaciones',
@@ -19,16 +20,28 @@ export class ConversacionesComponent implements OnInit {
   socket: any;
   imagenSeleccionada: File | null = null;
 
-  constructor(private conversacionService: ConversacionService) {}
+  constructor(
+    private conversacionService: ConversacionService,
+    private route: ActivatedRoute // ✅ agregado
+  ) {}
 
   ngOnInit(): void {
-    this.obtenerConversaciones();
     this.socket = io('http://localhost:3000');
 
-    this.socket.on('mensajeNuevo', (nuevoMensaje: any) => {
-      if (nuevoMensaje.id_usuario === this.usuarioActivo?.id_usuario) {
-        this.mensajes.push(nuevoMensaje);
+    this.route.params.subscribe(params => {
+      const idSolicitud = params['id_solicitud'];
+
+      if (idSolicitud) {
+        this.cargarMensajesPorSolicitud(idSolicitud);
+      } else {
+        this.obtenerConversaciones();
       }
+
+      this.socket.on('mensajeNuevo', (nuevoMensaje: any) => {
+        if (nuevoMensaje.id_solicitud === Number(idSolicitud)) {
+          this.mensajes.push(nuevoMensaje);
+        }
+      });
     });
   }
 
@@ -80,5 +93,14 @@ export class ConversacionesComponent implements OnInit {
 
   esImagen(nombre: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(nombre);
+  }
+
+  // ✅ NUEVO MÉTODO
+  cargarMensajesPorSolicitud(idSolicitud: number) {
+    this.conversacionService.obtenerMensajesPorSolicitud(idSolicitud).subscribe((res: any) => {
+      console.log('🧾 Respuesta del backend:', res); // ✅ Aquí se imprime toda la respuesta
+      this.mensajes = res.mensajes;
+      this.usuarioActivo = res.receptor;
+    });
   }
 }

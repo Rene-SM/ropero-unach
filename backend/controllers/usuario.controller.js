@@ -82,12 +82,15 @@ exports.login = (req, res) => {
     }
 
     const token = jwt.sign(
-      { id_usuario: usuario.id_usuario, nombre: usuario.nombre, tipo: usuario.tipo },
+      {
+        id_usuario: usuario.id_usuario,
+        nombre: usuario.nombre,
+        rol: usuario.tipo // 🔁 CAMBIO: ahora se guarda como 'rol'
+      },
       process.env.JWT_SECRET || 'secreto_super_seguro',
       { expiresIn: '2h' }
     );
 
-    // ✅ Modificación: enviar usuario con campos específicos, incluyendo tipo
     res.json({
       mensaje: 'Inicio de sesión exitoso',
       token,
@@ -95,7 +98,7 @@ exports.login = (req, res) => {
         id_usuario: usuario.id_usuario,
         nombre: usuario.nombre,
         correo: usuario.correo,
-        tipo: usuario.tipo
+        rol: usuario.tipo // 🔁 CAMBIO: se entrega al frontend como 'rol'
       }
     });
   });
@@ -177,5 +180,89 @@ exports.actualizarPerfil = async (req, res) => {
   } catch (error) {
     console.error('❌ Error al actualizar perfil:', error.message);
     res.status(500).json({ error: 'Error al actualizar perfil del usuario' });
+  }
+};
+// ✅ NUEVA FUNCIÓN: Verificar si el RUT ya está registrado
+exports.verificarRut = (req, res) => {
+  const rut = req.params.rut;
+
+  if (!rut) {
+    return res.status(400).json({ error: 'RUT requerido' });
+  }
+
+  Usuario.buscarPorRut(rut, (err, resultado) => {
+    if (err) {
+      console.error('❌ Error al verificar RUT:', err);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+    const existe = resultado.length > 0;
+    res.json(existe);
+  });
+};
+
+// 🌐 Obtener perfil público con estadísticas completas
+exports.obtenerPerfilPublico = async (req, res) => {
+  const userId = req.params.id;
+
+  const sqlUsuario = `
+    SELECT nombre, apellidos, rut
+    FROM Usuario
+    WHERE id_usuario = ?
+  `;
+
+  const sqlCalificaciones = `
+    SELECT c.puntuacion AS puntaje, c.comentario, u.nombre AS nombre_calificador
+    FROM Calificaciones c
+    JOIN Usuario u ON c.id_emisor = u.id_usuario
+    WHERE c.id_receptor = ?
+    ORDER BY c.fecha DESC
+  `;
+
+  const sqlTransacciones = `
+    SELECT COUNT(*) AS total
+    FROM Transacciones
+    WHERE id_comprador = ? OR id_vendedor = ?
+  `;
+
+  const sqlDistribucion = `
+    SELECT puntuacion, COUNT(*) AS cantidad
+    FROM Calificaciones
+    WHERE id_receptor = ?
+    GROUP BY puntuacion
+  `;
+
+  try {
+    const [usuario] = await db.query(sqlUsuario, [userId]);
+    const [calificaciones] = await db.query(sqlCalificaciones, [userId]);
+    const [transacciones] = await db.query(sqlTransacciones, [userId, userId]);
+    const [distribucionRaw] = await db.query(sqlDistribucion, [userId]);
+
+    if (usuario.length === 0) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    const total = calificaciones.length;
+    const promedio = total
+      ? (calificaciones.reduce((acc, cal) => acc + cal.puntaje, 0) / total).toFixed(1)
+      : null;
+
+    // Construir objeto de distribución: siempre con claves 1 a 5
+    const distribucion = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    distribucionRaw.forEach((row) => {
+      distribucion[row.puntuacion] = row.cantidad;
+    });
+
+    res.json({
+      usuario: usuario[0],
+      promedio,
+      total,
+      distribucion,
+      transacciones: transacciones[0].total,
+      calificaciones
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener perfil público:', error);
+    res.status(500).json({ mensaje: 'Error al obtener perfil público' });
   }
 };

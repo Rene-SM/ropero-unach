@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductoService } from '../../sesion/nueva-publicacion/producto.service';
+import { SolicitudService } from '../../conversaciones/solicitud.service'; // ✅ Importado
 
 @Component({
   standalone: true,
@@ -18,7 +19,9 @@ export class DetalleProductoComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productoService: ProductoService
+    private router: Router, // ✅ Agregado
+    private productoService: ProductoService,
+    private solicitudService: SolicitudService // ✅ Agregado
   ) {}
 
   ngOnInit(): void {
@@ -27,7 +30,7 @@ export class DetalleProductoComponent implements OnInit {
       this.productoService.obtenerProductoPorId(+id).subscribe(
         (res) => {
           this.producto = Array.isArray(res) ? res[0] : res;
-           console.log('📦 Producto recibido:', this.producto); 
+          console.log('📦 Producto recibido:', this.producto); 
 
           // 🔄 Asegurar que las imágenes se manejen correctamente
           if (this.producto.imagen && typeof this.producto.imagen === 'string') {
@@ -68,5 +71,30 @@ export class DetalleProductoComponent implements OnInit {
       this.indiceActual = (this.indiceActual - 1 + this.producto.imagenes.length) % this.producto.imagenes.length;
       this.imagenSeleccionada = this.producto.imagenes[this.indiceActual];
     }
+  }
+
+  // ✅ NUEVO MÉTODO
+  iniciarConversacion(): void {
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+    if (!usuario?.id_usuario) {
+      alert('Debes iniciar sesión para chatear');
+      return;
+    }
+
+    const data = {
+      id_producto: this.producto.id_producto,
+      id_usuario: usuario.id_usuario
+    };
+
+    this.solicitudService.iniciarSolicitud(data).subscribe({
+      next: (res) => {
+        const id_solicitud = res.id_solicitud;
+        this.router.navigate(['/conversaciones', id_solicitud]);
+      },
+      error: (err) => {
+        console.error('Error al iniciar conversación', err);
+      }
+    });
   }
 }

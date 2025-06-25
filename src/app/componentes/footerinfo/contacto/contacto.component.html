@@ -1,0 +1,50 @@
+<div class="form-container">
+  <h2 class="titulo-formulario">¿Tienes alguna pregunta o problema? ¡Contáctanos!</h2>
+
+  <form (ngSubmit)="enviarMensaje()" #form="ngForm" novalidate>
+    <!-- Nombre -->
+    <label>Nombre completo <span class="text-red-500">*</span></label>
+    <input type="text" class="input-estilo" [(ngModel)]="contacto.nombre" name="nombre" required placeholder="Ej: Juan Pérez" />
+    <div *ngIf="enviado && !contacto.nombre" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+
+    <!-- Correo -->
+    <label>Correo electrónico <span class="text-red-500">*</span></label>
+    <input type="email" class="input-estilo" [(ngModel)]="contacto.correo" name="correo" required placeholder="Ej: juan@unach.cl" />
+    <div *ngIf="enviado && !contacto.correo" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+
+    <!-- Tipo de usuario -->
+    <label>Tipo de usuario <span class="text-red-500">*</span></label>
+    <select class="input-estilo" [(ngModel)]="contacto.tipoUsuario" name="tipoUsuario" required>
+      <option value="" disabled selected>Seleccione una opción</option>
+      <option value="Estudiante">Estudiante</option>
+      <option value="Funcionario">Funcionario</option>
+    </select>
+    <div *ngIf="enviado && !contacto.tipoUsuario" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+
+    <!-- Tipo de consulta -->
+    <label>Tipo de consulta <span class="text-red-500">*</span></label>
+    <div class="radio-group">
+      <label class="custom-radio">
+        <input type="radio" name="tipoConsulta" value="Problema técnico" [(ngModel)]="contacto.tipoConsulta" required />
+        <span></span> Problema técnico
+      </label>
+      <label class="custom-radio">
+        <input type="radio" name="tipoConsulta" value="Sugerencia" [(ngModel)]="contacto.tipoConsulta" required />
+        <span></span> Sugerencia
+      </label>
+      <label class="custom-radio">
+        <input type="radio" name="tipoConsulta" value="Otro" [(ngModel)]="contacto.tipoConsulta" required />
+        <span></span> Otro
+      </label>
+    </div>
+    <div *ngIf="enviado && !contacto.tipoConsulta" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+
+    <!-- Mensaje -->
+    <label>Mensaje <span class="text-red-500">*</span></label>
+    <textarea class="input-estilo" rows="4" [(ngModel)]="contacto.mensaje" name="mensaje" required placeholder="Escribe tu mensaje aquí..."></textarea>
+    <div *ngIf="enviado && !contacto.mensaje" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</div>
+
+    <!-- Botón -->
+    <button type="submit" class="publish-button green-button">Enviar mensaje</button>
+  </form>
+</div>

@@ -71,7 +71,10 @@
           <button *ngIf="!usuarioAutenticado" (click)="abrirModalDesdeHeader()" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Inicia sesión</button>
           <a *ngIf="!usuarioAutenticado" routerLink="/registro" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Regístrate</a>
           <a *ngIf="usuarioAutenticado" routerLink="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Perfil</a>
-          <a *ngIf="usuarioAutenticado" routerLink="/nueva-publicacion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Nueva publicación</a>
+
+          <!-- ✅ Solo usuarios normales pueden ver este botón -->
+          <a *ngIf="usuarioAutenticado && !esAdmin" routerLink="/nueva-publicacion" class="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50">Nueva publicación</a>
+
           <button *ngIf="usuarioAutenticado" (click)="cerrarSesion()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">Cerrar sesión</button>
         </div>
       </div>

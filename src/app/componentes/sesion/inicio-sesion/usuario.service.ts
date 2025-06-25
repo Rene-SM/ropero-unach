@@ -26,4 +26,9 @@ export class UsuarioService {
   obtenerPerfilPublico(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/perfil-publico/${id}`);
   }
+
+  // 🔍 Verificar si el RUT ya está registrado
+  verificarRut(rut: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/verificar-rut/${encodeURIComponent(rut)}`);
+  }
 }

@@ -25,4 +25,8 @@ export class ConversacionService {
   enviarImagen(formData: FormData): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/enviar-imagen`, formData);
   }
+
+  obtenerMensajesPorSolicitud(idSolicitud: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/por-solicitud/${idSolicitud}`);
+  }
 }

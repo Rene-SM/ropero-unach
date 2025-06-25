@@ -7,6 +7,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ProductoService } from './producto.service';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -51,18 +52,7 @@ export class NuevaPublicacionComponent implements OnInit {
 
   tallasCalzado = Array.from({ length: 16 }, (_, i) => (30 + i).toString());
 
-  publicacion: {
-    titulo: string;
-    estado: string;
-    talla: string;
-    descripcion: string;
-    tipoOperacion: string;
-    precio: number;
-    tipoDonacion: string;
-    categoriaGeneral: string;
-    subcategoria: string;
-    cantidad: number | null;
-  } = {
+  publicacion = {
     titulo: '',
     estado: '',
     talla: '',
@@ -75,13 +65,13 @@ export class NuevaPublicacionComponent implements OnInit {
     cantidad: null
   };
 
-  precioFormateado: string = '';
-  imagenes: { archivo: File, preview: string }[] = [];
+  precioFormateado = '';
+  imagenes: { archivo: File; preview: string }[] = [];
 
-  mostrarModalExito: boolean = false;
-  mostrarModalError: boolean = false;
+  mostrarModalExito = false;
+  mostrarModalError = false;
 
-  constructor(private productoService: ProductoService) {}
+  constructor(private productoService: ProductoService, private router: Router) {}
 
   ngOnInit(): void {}
 
@@ -143,13 +133,8 @@ export class NuevaPublicacionComponent implements OnInit {
       !this.publicacion.tipoOperacion;
 
     const categoriaIncompleta = !this.publicacion.categoriaGeneral || !this.publicacion.subcategoria;
-
-    const precioInvalido = this.publicacion.tipoOperacion === 'Vender' &&
-      (!this.publicacion.precio || this.publicacion.precio <= 0);
-
-    const donacionIncompleta = this.publicacion.tipoOperacion === 'donar' &&
-      !this.publicacion.tipoDonacion;
-
+    const precioInvalido = this.publicacion.tipoOperacion === 'Vender' && (!this.publicacion.precio || this.publicacion.precio <= 0);
+    const donacionIncompleta = this.publicacion.tipoOperacion === 'donar' && !this.publicacion.tipoDonacion;
     const sinImagenes = this.imagenes.length === 0;
 
     if (camposBaseIncompletos || categoriaIncompleta || precioInvalido || donacionIncompleta || sinImagenes) {
@@ -158,7 +143,6 @@ export class NuevaPublicacionComponent implements OnInit {
     }
 
     const formData = new FormData();
-
     const claveCategoria = `${this.publicacion.categoriaGeneral}-${this.publicacion.subcategoria}`;
     const idCategoria = this.categoriasDB[claveCategoria];
 
@@ -193,7 +177,6 @@ export class NuevaPublicacionComponent implements OnInit {
     this.productoService.publicarProducto(formData).subscribe({
       next: () => {
         this.mostrarModalExito = true;
-        this.resetearFormulario();
       },
       error: () => {
         this.mostrarModalError = true;
@@ -223,5 +206,18 @@ export class NuevaPublicacionComponent implements OnInit {
     };
     this.precioFormateado = '';
     this.imagenes = [];
+  }
+
+  // ✅ NUEVAS FUNCIONES
+  seguirPublicando() {
+    this.resetearFormulario();
+    this.mostrarModalExito = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  irAlInicio() {
+    this.resetearFormulario();
+    this.mostrarModalExito = false;
+    this.router.navigate(['/']);
   }
 }

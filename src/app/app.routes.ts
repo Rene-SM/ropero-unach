@@ -34,7 +34,7 @@ export const routes: Routes = [
   { path: 'categoria/ropa-mujer', component: RopaMujerComponent },
   { path: 'categoria/accesorios', component: AccesoriosComponent },
 
-  // ✅ Otros componentes
+  // ✅ Otros componentes principales
   {
     path: 'nueva-publicacion',
     loadComponent: () =>
@@ -48,12 +48,44 @@ export const routes: Routes = [
         .then(m => m.ConversacionesComponent)
   },
   {
+  path: 'conversaciones/:id_solicitud',
+    loadComponent: () =>
+      import('./componentes/conversaciones/conversaciones.component')
+        .then(m => m.ConversacionesComponent)
+  },
+  {
     path: 'perfil',
     loadComponent: () =>
       import('./componentes/perfil/perfil.component')
         .then(m => m.PerfilComponent)
   },
-  { path: 'detalle-producto/:id', component: DetalleProductoComponent }
+  {
+  path: 'perfil-publico/:id',
+  loadComponent: () =>
+    import('./componentes/perfil-usuario/perfil-usuario.component')
+      .then(m => m.PerfilUsuarioComponent)
+},
+  { path: 'detalle-producto/:id', component: DetalleProductoComponent },
+
+  // ✅ Rutas del footer (nombre corregido: "footerinfo")
+  {
+    path: 'quienes-somos',
+    loadComponent: () =>
+      import('./componentes/footerinfo/quienes-somos/quienes-somos.component')
+        .then(m => m.QuienesSomosComponent)
+  },
+  {
+    path: 'preguntas-frecuentes',
+    loadComponent: () =>
+      import('./componentes/footerinfo/preguntas-frecuentes/preguntas-frecuentes.component')
+        .then(m => m.PreguntasFrecuentesComponent)
+  },
+  {
+    path: 'contacto',
+    loadComponent: () =>
+      import('./componentes/footerinfo/contacto/contacto.component')
+        .then(m => m.ContactoComponent)
+  }
 ];
 
 // ✅ Export necesario para usar en app.config.ts

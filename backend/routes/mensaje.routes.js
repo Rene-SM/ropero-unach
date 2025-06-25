@@ -30,4 +30,7 @@ router.post('/enviar', mensajesController.enviarMensaje);
 // Enviar un nuevo mensaje con imagen
 router.post('/enviar-imagen', upload.single('imagen'), mensajesController.enviarMensajeConImagen);
 
+// ✅ NUEVA RUTA para obtener mensajes por solicitud
+router.get('/por-solicitud/:id', mensajesController.obtenerMensajesPorSolicitud);
+
 module.exports = router;

@@ -87,6 +87,20 @@ export class RegistrarComponent {
     return dv === dvCalculado;
   }
 
+  // ✅ NUEVA FUNCIÓN: Formatear RUT al estilo 12.345.678-K
+  formatearRut(rut: string): string {
+    rut = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
+
+    if (rut.length < 2) return rut;
+
+    const cuerpo = rut.slice(0, -1);
+    const dv = rut.slice(-1);
+
+    const cuerpoFormateado = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    return `${cuerpoFormateado}-${dv}`;
+  }
+
   get fechaMaxima(): string {
     const hoy = new Date();
     hoy.setFullYear(hoy.getFullYear() - 14);
@@ -146,39 +160,42 @@ export class RegistrarComponent {
       return;
     }
 
+    // Paso 1: Validar RUT matemáticamente
     if (!this.rutValido(this.usuario.rut)) {
       this.mostrarMensaje('RUT inválido',
-        'El RUT ingresado no es válido. Asegúrate del formato.');
+        'El RUT ingresado no es válido. Verifica tu RUT y reinténtalo.');
       return;
     }
 
-    if (!this.validarPassword(this.usuario.password)) {
-      this.mostrarMensaje('Contraseña insegura',
-        'La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y sin espacios.');
-      return;
-    }
-
-    if (this.usuario.password !== this.usuario.repetirPassword) {
-      this.mostrarMensaje('Contraseñas no coinciden',
-        'Verifica que ambas contraseñas sean iguales.');
-      return;
-    }
-
-    // 🔒 Validar clave secreta si el tipo es admin
-    if (this.usuario.tipo === 'admin' && this.claveAdmin !== this.CLAVE_ADMIN) {
-      this.mostrarMensaje('Clave incorrecta',
-        'La clave secreta ingresada no es válida para registrar un administrador.');
-      return;
-    }
-
-    this.usuarioService.verificarCorreo(this.usuario.correo).subscribe({
+      // Paso 2: Verificar si el RUT ya está registrado en la base de datos
+    this.usuarioService.verificarRut(this.usuario.rut).subscribe({
       next: (existe: boolean) => {
         if (existe) {
-          this.mostrarMensaje('Correo duplicado',
-            '⚠️ Este correo ya está registrado.', false, true);
+          this.usuario.rut = ''; // ⬅️ Solo se limpia el campo RUT
+          this.mostrarMensaje('RUT duplicado',
+            '⚠️ Este RUT ya está registrado. Intenta con otro.', false);
         } else {
-          this.enviarRegistro();
+          this.verificarCorreoYRegistrar();
         }
+      },
+      error: () => {
+        this.mostrarMensaje('Error',
+          '❌ Ocurrió un error al verificar el RUT.');
+      }
+    });
+  }
+
+  verificarCorreoYRegistrar() {
+    this.usuarioService.verificarCorreo(this.usuario.correo).subscribe({
+      next: (existe: boolean) => {
+      if (existe) {
+        this.usuario.correo = ''; // ✅ Solo se limpia el campo de correo
+        this.mostrarMensaje('Correo duplicado',
+          '⚠️ Este correo ya está registrado. Intenta con otro.', false);
+      } else {
+        this.enviarRegistro();
+      }
+
       },
       error: () => {
         this.mostrarMensaje('Error',

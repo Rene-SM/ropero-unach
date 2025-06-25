@@ -37,7 +37,8 @@ export class RopaHombreComponent implements OnInit {
     if (usuario) {
       const parsed = JSON.parse(usuario);
       this.usuario = parsed;
-      this.esAdmin = parsed.tipo === 'admin';
+      this.esAdmin = parsed.rol === 'admin';
+
     }
 
     this.cargarProductos();

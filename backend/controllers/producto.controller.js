@@ -6,6 +6,11 @@ const ProductoController = {
   // Crear producto
   crearProducto: async (req, res) => {
     try {
+      // 🚫 Bloquear publicación para administradores
+      if (req.usuario?.rol === 'admin') {
+        return res.status(403).json({ mensaje: 'Los administradores no pueden publicar productos' });
+      }
+
       const {
         id_categoria,
         id_tipo_donacion,
@@ -63,7 +68,7 @@ const ProductoController = {
     }
   },
 
-  // Obtener producto por ID con todas sus imágenes
+  // Obtener producto por ID con imágenes
   obtenerProductoPorId: async (req, res) => {
     try {
       const id = req.params.id;
@@ -194,7 +199,7 @@ const ProductoController = {
     }
   },
 
-  // ✅ Eliminar producto y registrar moderación
+  // Eliminar producto y registrar moderación
   eliminarProducto: async (req, res) => {
     const { id } = req.params;
     const idAdmin = req.headers['idadmin'];
@@ -229,7 +234,7 @@ const ProductoController = {
     }
   },
 
-  // ✅ Obtener historial de moderación
+  // Obtener historial de moderación
   obtenerHistorialModeracion: async (_req, res) => {
     try {
       const [rows] = await db.execute(`

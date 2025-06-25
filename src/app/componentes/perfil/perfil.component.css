@@ -362,3 +362,18 @@
   text-decoration: underline;
   font-weight: 500;
 }
+
+.boton-ver-perfil {
+  background-color: #00796b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boton-ver-perfil:hover {
+  background-color: #004d40;
+}

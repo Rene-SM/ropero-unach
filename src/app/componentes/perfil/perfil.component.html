@@ -5,7 +5,8 @@
       <li [class.activo]="modo === 'datos'" (click)="modo = 'datos'">👤 Datos personales</li>
       <li [class.activo]="modo === 'calificaciones'" (click)="modo = 'calificaciones'">⭐ Calificaciones</li>
       <li [class.activo]="modo === 'password'" (click)="modo = 'password'">🔒 Cambiar contraseña</li>
-      <li [class.activo]="modo === 'publicaciones'" (click)="modo = 'publicaciones'">📦 Historial de publicaciones</li>
+      <!-- ✅ Se oculta para admins -->
+      <li *ngIf="!esAdmin" [class.activo]="modo === 'publicaciones'" (click)="modo = 'publicaciones'">📦 Historial de publicaciones</li>
       <li [class.activo]="modo === 'compras'" (click)="modo = 'compras'">🛍 Historial de compras</li>
       <!-- ✅ Nuevo solo para admin -->
       <li *ngIf="usuario?.tipo === 'admin'" [class.activo]="modo === 'moderacion'" (click)="modo = 'moderacion'">🛡️ Historial de moderación</li>
@@ -16,8 +17,16 @@
   <main class="contenido-perfil">
 
     <!-- DATOS PERSONALES -->
-    <div *ngIf="modo === 'datos'">
+    <div *ngIf="modo === 'datos'" style="position: relative;">
       <h2>Datos personales</h2>
+      <button
+        class="boton-ver-perfil"
+        (click)="verPerfilPublico()"
+        style="position: absolute; top: 0; right: 0;"
+      >
+        👁️ Visualizar mi perfil
+      </button>
+        
       <div class="formulario-perfil">
         <div class="campo"><label>Nombre</label><input [(ngModel)]="usuarioEditado.nombre" [disabled]="!editando" /></div>
         <div class="campo"><label>Apellidos</label><input [(ngModel)]="usuarioEditado.apellidos" [disabled]="!editando" /></div>
@@ -96,7 +105,7 @@
     </div>
 
     <!-- HISTORIAL DE PUBLICACIONES -->
-    <div *ngIf="modo === 'publicaciones'">
+    <div *ngIf="modo === 'publicaciones' && !esAdmin">
       <h2>📦 Historial de publicaciones</h2>
 
       <div *ngIf="historialPublicaciones.length === 0">
@@ -121,22 +130,25 @@
       <p>Próximamente se mostrarán tus compras realizadas aquí.</p>
     </div>
 
- <!-- 🛡️ HISTORIAL DE MODERACIÓN -->
-<div *ngIf="modo === 'moderacion'">
-  <h2>🛡️ Historial de moderación</h2>
+    <!-- 🛡️ HISTORIAL DE MODERACIÓN -->
+    <div *ngIf="modo === 'moderacion'">
+      <h2>🛡️ Historial de moderación</h2>
 
-  <div *ngIf="historialModeracion?.length === 0">
-    <p>No hay productos eliminados registrados aún.</p>
-  </div>
+      <div *ngIf="historialModeracion?.length === 0">
+        <p>No hay productos eliminados registrados aún.</p>
+      </div>
 
-  <div class="moderacion-lista" *ngIf="historialModeracion && historialModeracion.length > 0">
-    <div class="moderacion-item" *ngFor="let item of historialModeracion">
-      <p><strong>🧺 Producto eliminado:</strong> {{ item.nombre_producto }}</p>
-      <p><strong>👤 Usuario afectado:</strong> {{ item.nombre }} {{ item.apellidos }}</p>
-      <p><strong>📅 Fecha:</strong> {{ item.fecha_eliminacion | date:'medium' }}</p>
-      <a [routerLink]="['/perfil-publico', item.id_usuario]" class="link-perfil">
-        🔗 Ver perfil del usuario
-      </a>
+      <div class="moderacion-lista" *ngIf="historialModeracion && historialModeracion.length > 0">
+        <div class="moderacion-item" *ngFor="let item of historialModeracion">
+          <p><strong>🧺 Producto eliminado:</strong> {{ item.nombre_producto }}</p>
+          <p><strong>👤 Usuario afectado:</strong> {{ item.nombre }} {{ item.apellidos }}</p>
+          <p><strong>📅 Fecha:</strong> {{ item.fecha_eliminacion | date:'medium' }}</p>
+          <a [routerLink]="['/perfil-publico', item.id_usuario]" class="link-perfil">
+            🔗 Ver perfil del usuario
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
+
+  </main>
 </div>

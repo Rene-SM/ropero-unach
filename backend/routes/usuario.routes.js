@@ -20,16 +20,18 @@ router.post(
 // 🔐 Inicio de sesión
 router.post('/login', usuarioController.login);
 
-// 🔍 Verificar si un correo ya está registrado
-router.get('/verificar', usuarioController.verificarCorreo);
+// 🔍 Verificaciones de correo y RUT
+router.get('/verificar', usuarioController.verificarCorreo); // uso general
+router.get('/verificar-correo/:correo', usuarioController.verificarCorreo);
+router.get('/verificar-rut/:rut', usuarioController.verificarRut);
 
-// 📄 Obtener perfil de un usuario por su ID (GET)
+// 📄 Obtener perfil completo del propio usuario (para edición u opciones privadas)
 router.get('/perfil/:id', usuarioController.obtenerPerfil);
 
-// ✏️ Actualizar información del perfil (PUT)
+// 🌐 Obtener perfil público visible por otros usuarios
+router.get('/perfil-publico/:id', usuarioController.obtenerPerfilPublico);
+
+// ✏️ Actualizar información del perfil del usuario
 router.put('/:id', usuarioController.actualizarPerfil);
-
-router.get('/verificar-correo/:correo', usuarioController.verificarCorreo);
-
 
 module.exports = router;

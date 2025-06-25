@@ -19,6 +19,8 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/usuario', require('./routes/usuario.routes'));     // Singular
 app.use('/api/productos', require('./routes/producto.routes'));
 app.use('/api/mensajes', require('./routes/mensaje.routes'));
+app.use('/api/solicitudes', require('./routes/solicitud.routes'));
+
 
 // 🔎 Ruta raíz de prueba
 app.get('/', (req, res) => {

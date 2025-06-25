@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
   mostrarModalLogin: boolean = false;
   usuarioAutenticado: boolean = false;
   nombreUsuario: string = '';
+  esAdmin: boolean = false; // ✅ nueva variable
 
   constructor(private router: Router) {}
 
@@ -33,6 +34,7 @@ export class HeaderComponent implements OnInit {
       const usuarioData = JSON.parse(usuario);
       this.usuarioAutenticado = true;
       this.nombreUsuario = usuarioData.nombre || 'Usuario';
+      this.esAdmin = usuarioData.rol === 'admin'; // ✅ detectamos si es admin
     }
   }
 
@@ -45,6 +47,7 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem('token');
     this.usuarioAutenticado = false;
     this.nombreUsuario = '';
+    this.esAdmin = false; // ✅ limpiar el rol al cerrar sesión
     this.router.navigate(['/']);
   }
 

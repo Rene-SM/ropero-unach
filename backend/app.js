@@ -8,19 +8,28 @@ const { initSocket } = require('./socket');
 const app = express();
 
 // 🌐 Middlewares globales
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+  credentials: true
+}));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api/conversaciones', require('./routes/conversacion.routes'));
+
 // 🖼️ Archivos estáticos (como imágenes subidas)
 app.use('/uploads', express.static('uploads'));
+app.use('/uploads/perfiles', express.static('uploads/perfiles')); // ✅ NUEVO: Para imágenes de perfil
 
 // 🔌 Rutas API
 app.use('/api/usuario', require('./routes/usuario.routes'));     // Singular
 app.use('/api/productos', require('./routes/producto.routes'));
 app.use('/api/mensajes', require('./routes/mensaje.routes'));
 app.use('/api/solicitudes', require('./routes/solicitud.routes'));
-
 
 // 🔎 Ruta raíz de prueba
 app.get('/', (req, res) => {

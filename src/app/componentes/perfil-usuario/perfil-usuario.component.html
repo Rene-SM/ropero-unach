@@ -1,39 +1,44 @@
 <div *ngIf="perfil" class="perfil-publico-container">
   <div class="card-perfil">
-    <!-- ENCABEZADO -->
-    <div class="flex items-center space-x-4 mb-6">
-      <div class="bg-green-100 text-green-800 rounded-full p-4">
-        <i class="fa fa-user text-3xl"></i>
-      </div>
-      <div>
-        <h2 class="nombre-usuario">
-          {{ perfil.usuario.nombre }} {{ perfil.usuario.apellidos }}
-        </h2>
-        <p class="rut">RUT: {{ perfil.usuario.rut }}</p>
+
+    <!-- ENCABEZADO ESTILO INSTAGRAM -->
+    <div class="perfil-encabezado">
+      <img [src]="'http://localhost:3000/uploads/perfiles/' + perfil.imagen" alt="Foto de perfil" class="foto-perfil" />
+      <div class="info-perfil">
+        <div class="header-line">
+          <h2 class="nombre-usuario">{{ perfil.nombre }} {{ perfil.apellidos }}</h2>
+          <ng-container *ngIf="esMiPerfil; else botonMensaje">
+            <button class="btn-editar" routerLink="/perfil">Editar perfil</button>
+          </ng-container>
+            <ng-template #botonMensaje>
+              <button (click)="iniciarConversacion()" class="btn btn-mensaje bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition">
+              Enviar mensaje
+              </button>
+            </ng-template>
+        </div>
+        <p class="rut">RUT: {{ perfil.rut }}</p>
+        <p class="tipo-usuario">{{ perfil.tipo }}</p>
+        <p class="fecha-registro">Miembro desde: {{ perfil.fecha_registro | date:'dd/MM/yyyy' }}</p>
       </div>
     </div>
 
     <!-- CALIFICACIONES -->
     <div class="bloque">
       <h3>Calificaciones</h3>
-
       <ng-container *ngIf="perfil.promedio; else sinCalificaciones">
         <div class="flex items-center mb-2">
           <span class="text-3xl font-bold text-yellow-500">{{ perfil.promedio }}</span>
           <span class="ml-1 text-gray-600 text-xl">/ 5</span>
         </div>
         <p class="text-sm text-gray-600 mb-4">{{ perfil.total }} evaluaciones</p>
-
-        <!-- DISTRIBUCIÓN POR ESTRELLAS -->
         <div *ngFor="let star of [5,4,3,2,1]" class="flex items-center mb-1">
-          <span class="w-6 text-sm">{{ star }}★</span>
+          <span class="w-6 text-sm">{{ star }} ★</span>
           <div class="flex-1 h-2 mx-2 bg-gray-200 rounded">
             <div class="h-2 bg-yellow-400 rounded" [style.width.%]="obtenerPorcentaje(star)"></div>
           </div>
           <span class="w-6 text-sm text-gray-600 text-right">{{ obtenerCantidad(star) }}</span>
         </div>
       </ng-container>
-
       <ng-template #sinCalificaciones>
         <p>Este usuario aún no tiene calificaciones.</p>
       </ng-template>
@@ -58,5 +63,6 @@
         </li>
       </ul>
     </div>
+
   </div>
 </div>

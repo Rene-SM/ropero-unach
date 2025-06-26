@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router'; // ⬅️ Se agregó Router aquí
+import { RouterModule, Router } from '@angular/router';
 import { ProductoService } from '../sesion/nueva-publicacion/producto.service';
 import Swal from 'sweetalert2';
 
@@ -19,7 +19,9 @@ export class PerfilComponent implements OnInit {
   calificaciones: any[] = [];
   promedio: number | null = null;
   editando: boolean = false;
-  modo: 'datos' | 'calificaciones' | 'password' | 'publicaciones' | 'compras' | 'moderacion' = 'datos';
+
+  // ✅ Se agregó 'foto' como opción
+  modo: 'foto' | 'datos' | 'calificaciones' | 'password' | 'publicaciones' | 'compras' | 'moderacion' = 'datos';
 
   contrasenaActual: string = '';
   nuevaContrasena: string = '';
@@ -35,10 +37,12 @@ export class PerfilComponent implements OnInit {
 
   esAdmin: boolean = false;
 
+  nuevaImagen: File | null = null;
+
   constructor(
     private http: HttpClient,
     private productoService: ProductoService,
-    private router: Router // ✅ Agregado para navegación
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +59,8 @@ export class PerfilComponent implements OnInit {
         this.promedio = res.promedio_calificacion;
         this.usuarioEditado = { ...res.usuario };
         this.esAdmin = res.usuario.tipo === 'admin';
+
+        console.log('🧠 Datos del usuariossssssss:', this.usuario);
 
         if (this.esAdmin) {
           this.cargarHistorialModeracion();
@@ -225,9 +231,44 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  // ✅ NUEVO MÉTODO
+  seleccionarImagen(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Formato inválido',
+        text: 'Solo se permiten imágenes JPG, JPEG, PNG o WEBP.',
+        confirmButtonColor: '#43a047'
+      });
+      return;
+    }
+
+    this.nuevaImagen = file;
+  }
+
+  subirImagen() {
+    if (!this.nuevaImagen || !this.usuario?.id_usuario) return;
+
+    const formData = new FormData();
+    formData.append('imagen', this.nuevaImagen);
+
+    this.http.put(`http://localhost:3000/api/usuario/subir-imagen/${this.usuario.id_usuario}`, formData).subscribe({
+      next: (res: any) => {
+        this.usuario.imagen = res.imagen;
+        this.nuevaImagen = null;
+        Swal.fire('Imagen actualizada', 'Tu foto de perfil fue cambiada correctamente', 'success');
+      },
+      error: err => {
+        console.error('Error al subir imagen:', err);
+        Swal.fire('Error', 'No se pudo subir la imagen', 'error');
+      }
+    });
+  }
+
   verPerfilPublico() {
-     console.log('Redirigiendo al perfil público con ID:', this.usuario?.id_usuario);
     if (this.usuario && this.usuario.id_usuario) {
       this.router.navigate(['/perfil-publico', this.usuario.id_usuario]);
     }

@@ -26,14 +26,30 @@ export class ContactoComponent {
     this.enviado = true;
 
     const { nombre, correo, tipoUsuario, tipoConsulta, mensaje } = this.contacto;
+
+    // Validación de campos vacíos
     if (!nombre || !correo || !tipoUsuario || !tipoConsulta || !mensaje) {
       return;
     }
 
+    // Validar correo institucional
+    const correoValido = correo.endsWith('@unach.cl') || correo.endsWith('@alu.unach.cl');
+    if (!correoValido) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Correo inválido',
+        html: 'Por favor usa tu correo institucional (<b>@unach.cl</b> o <b>@alu.unach.cl</b>).',
+        confirmButtonColor: '#4caf50'
+      });
+      return;
+    }
+
+    // Mostrar confirmación de mensaje enviado
     Swal.fire({
       icon: 'success',
       title: '¡Mensaje enviado!',
-      text: 'Gracias por contactarnos. Te responderemos pronto.'
+      text: 'Gracias por contactarnos. Te responderemos pronto.',
+      confirmButtonColor: '#4caf50'
     });
 
     // Limpiar campos

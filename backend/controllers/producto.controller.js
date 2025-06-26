@@ -68,13 +68,16 @@ const ProductoController = {
     }
   },
 
-  // Obtener producto por ID con imágenes
+  // Obtener producto por ID con imágenes y datos del usuario
   obtenerProductoPorId: async (req, res) => {
     try {
       const id = req.params.id;
 
       const [productoRows] = await db.execute(`
-        SELECT * FROM Productos WHERE id_producto = ?
+        SELECT p.*, u.id_usuario AS id_usuario_publicador, u.nombre AS nombre_publicador, u.apellidos AS apellidos_publicador
+        FROM Productos p
+        JOIN Usuario u ON p.id_usuario = u.id_usuario
+        WHERE p.id_producto = ?
       `, [id]);
 
       if (productoRows.length === 0) {
@@ -83,6 +86,19 @@ const ProductoController = {
 
       const producto = productoRows[0];
 
+      // 👤 Añadir datos del usuario publicador
+      producto.usuario = {
+        id_usuario: producto.id_usuario_publicador,
+        nombre: producto.nombre_publicador,
+        apellidos: producto.apellidos_publicador
+      };
+
+      // Eliminar duplicados si se desea
+      delete producto.id_usuario_publicador;
+      delete producto.nombre_publicador;
+      delete producto.apellidos_publicador;
+
+      // Obtener imágenes asociadas
       const [imagenesRows] = await db.execute(`
         SELECT url_imagen FROM Imagenes WHERE id_producto = ?
       `, [id]);

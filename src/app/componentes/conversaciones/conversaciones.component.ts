@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConversacionService } from './conversacion.service';
 import { io } from 'socket.io-client';
-import { ActivatedRoute } from '@angular/router'; // ✅ agregado
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-conversaciones',
@@ -19,53 +19,61 @@ export class ConversacionesComponent implements OnInit {
   usuarioActivo: any = null;
   socket: any;
   imagenSeleccionada: File | null = null;
+  idConversacion: number = 0;
+
 
   constructor(
     private conversacionService: ConversacionService,
-    private route: ActivatedRoute // ✅ agregado
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.socket = io('http://localhost:3000');
 
     this.route.params.subscribe(params => {
-      const idSolicitud = params['id_solicitud'];
-
-      if (idSolicitud) {
-        this.cargarMensajesPorSolicitud(idSolicitud);
-      } else {
-        this.obtenerConversaciones();
+      this.idConversacion = Number(params['id_solicitud']);
+      if (this.idConversacion) {
+        this.cargarMensajes(this.idConversacion);
       }
 
       this.socket.on('mensajeNuevo', (nuevoMensaje: any) => {
-        if (nuevoMensaje.id_solicitud === Number(idSolicitud)) {
+        if (nuevoMensaje.id_conversacion === this.idConversacion) {
           this.mensajes.push(nuevoMensaje);
         }
       });
     });
+
+    this.obtenerConversaciones();
   }
 
   obtenerConversaciones() {
     this.conversacionService.obtenerConversaciones().subscribe((data) => {
       this.conversaciones = data;
+
+      if (this.idConversacion) {
+        const activa = data.find(c => c.id_conversacion === this.idConversacion);
+        if (activa) {
+          this.abrirConversacion(activa); // ✅ Esta línea activa la vista del chat
+        }
+      }
     });
   }
 
-  abrirConversacion(usuario: any) {
-    this.usuarioActivo = usuario;
-    this.conversacionService.obtenerMensajes(usuario.id_usuario).subscribe((data) => {
+  abrirConversacion(conv: any) {
+    this.usuarioActivo = conv.receptor || conv;
+    this.idConversacion = conv.id_conversacion;
+    this.cargarMensajes(this.idConversacion);
+  }
+
+  cargarMensajes(id: number) {
+    this.conversacionService.obtenerMensajes(id).subscribe((data) => {
       this.mensajes = data;
     });
   }
 
   enviarMensaje() {
-    if (this.mensaje.trim()) {
-      const nuevo = {
-        contenido: this.mensaje,
-        receptor: this.usuarioActivo.id_usuario
-      };
-
-      this.conversacionService.enviarMensaje(nuevo).subscribe((res) => {
+    if (this.mensaje.trim() && this.idConversacion) {
+      this.conversacionService.enviarMensaje(this.idConversacion, this.mensaje).subscribe((res) => {
         this.mensajes.push(res);
         this.socket.emit('mensajeEnviado', res);
         this.mensaje = '';
@@ -78,13 +86,12 @@ export class ConversacionesComponent implements OnInit {
   }
 
   enviarImagen() {
-    if (!this.imagenSeleccionada || !this.usuarioActivo) return;
+    if (!this.imagenSeleccionada || !this.usuarioActivo || !this.idConversacion) return;
 
     const formData = new FormData();
     formData.append('imagen', this.imagenSeleccionada);
-    formData.append('receptor', this.usuarioActivo.id_usuario);
 
-    this.conversacionService.enviarImagen(formData).subscribe((res) => {
+    this.conversacionService.enviarImagen(this.idConversacion, formData).subscribe((res) => {
       this.mensajes.push(res);
       this.socket.emit('mensajeEnviado', res);
       this.imagenSeleccionada = null;
@@ -93,14 +100,5 @@ export class ConversacionesComponent implements OnInit {
 
   esImagen(nombre: string): boolean {
     return /\.(jpg|jpeg|png|gif)$/i.test(nombre);
-  }
-
-  // ✅ NUEVO MÉTODO
-  cargarMensajesPorSolicitud(idSolicitud: number) {
-    this.conversacionService.obtenerMensajesPorSolicitud(idSolicitud).subscribe((res: any) => {
-      console.log('🧾 Respuesta del backend:', res); // ✅ Aquí se imprime toda la respuesta
-      this.mensajes = res.mensajes;
-      this.usuarioActivo = res.receptor;
-    });
   }
 }

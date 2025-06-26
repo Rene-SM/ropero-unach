@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuario.model');
 const db = require('../config/db');
+const path = require('path'); // ✅ requerido para manejo de ruta
 
 // Registro de usuario
 exports.registrar = (req, res) => {
@@ -85,7 +86,7 @@ exports.login = (req, res) => {
       {
         id_usuario: usuario.id_usuario,
         nombre: usuario.nombre,
-        rol: usuario.tipo // 🔁 CAMBIO: ahora se guarda como 'rol'
+        rol: usuario.tipo
       },
       process.env.JWT_SECRET || 'secreto_super_seguro',
       { expiresIn: '2h' }
@@ -98,7 +99,7 @@ exports.login = (req, res) => {
         id_usuario: usuario.id_usuario,
         nombre: usuario.nombre,
         correo: usuario.correo,
-        rol: usuario.tipo // 🔁 CAMBIO: se entrega al frontend como 'rol'
+        rol: usuario.tipo
       }
     });
   });
@@ -128,7 +129,7 @@ exports.obtenerPerfil = async (req, res) => {
   const userId = req.params.id;
 
   const sqlUsuario = `
-    SELECT id_usuario, nombre, apellidos, correo, rut, celular, tipo, fecha_registro
+    SELECT id_usuario, nombre, apellidos, correo, rut, celular, tipo, fecha_registro, imagen
     FROM Usuario
     WHERE id_usuario = ?
   `;
@@ -182,6 +183,7 @@ exports.actualizarPerfil = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar perfil del usuario' });
   }
 };
+
 // ✅ NUEVA FUNCIÓN: Verificar si el RUT ya está registrado
 exports.verificarRut = (req, res) => {
   const rut = req.params.rut;
@@ -206,7 +208,7 @@ exports.obtenerPerfilPublico = async (req, res) => {
   const userId = req.params.id;
 
   const sqlUsuario = `
-    SELECT nombre, apellidos, rut
+    SELECT nombre, apellidos, rut, tipo, imagen, fecha_registro
     FROM Usuario
     WHERE id_usuario = ?
   `;
@@ -247,22 +249,48 @@ exports.obtenerPerfilPublico = async (req, res) => {
       ? (calificaciones.reduce((acc, cal) => acc + cal.puntaje, 0) / total).toFixed(1)
       : null;
 
-    // Construir objeto de distribución: siempre con claves 1 a 5
     const distribucion = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     distribucionRaw.forEach((row) => {
       distribucion[row.puntuacion] = row.cantidad;
     });
 
-    res.json({
-      usuario: usuario[0],
-      promedio,
-      total,
-      distribucion,
-      transacciones: transacciones[0].total,
-      calificaciones
-    });
+  res.json({
+    id_usuario: userId,
+    nombre: usuario[0].nombre,
+    apellidos: usuario[0].apellidos,
+    rut: usuario[0].rut,
+    tipo: usuario[0].tipo,
+    imagen: usuario[0].imagen,
+    fecha_registro: usuario[0].fecha_registro, // ✅ NUEVO
+    promedio,
+    total,
+    distribucion,
+    transacciones: transacciones[0].total,
+    calificaciones
+  });
+
   } catch (error) {
     console.error('❌ Error al obtener perfil público:', error);
     res.status(500).json({ mensaje: 'Error al obtener perfil público' });
+  }
+};
+
+// 📸 NUEVA FUNCIÓN: Subir imagen de perfil
+exports.subirImagenPerfil = async (req, res) => {
+  const id = req.params.id;
+  const imagen = req.file ? req.file.filename : null;
+
+  if (!imagen) {
+    return res.status(400).json({ mensaje: 'No se recibió ninguna imagen' });
+  }
+
+  const sql = `UPDATE Usuario SET imagen = ? WHERE id_usuario = ?`;
+
+  try {
+    await db.query(sql, [imagen, id]);
+    res.json({ mensaje: 'Imagen de perfil actualizada correctamente', imagen });
+  } catch (error) {
+    console.error('❌ Error al subir imagen:', error);
+    res.status(500).json({ mensaje: 'Error al actualizar imagen de perfil' });
   }
 };

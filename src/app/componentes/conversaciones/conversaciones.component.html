@@ -2,7 +2,7 @@
   <!-- Panel Izquierdo -->
   <div class="panel-izquierdo">
     <h2 class="titulo-panel">Mensajes</h2>
-    <div *ngFor="let conv of conversaciones" (click)="abrirConversacion(conv.receptor)" class="contacto"
+    <div *ngFor="let conv of conversaciones" (click)="abrirConversacion(conv)"
          [class.activo]="usuarioActivo?.id_usuario === conv.receptor.id_usuario">
       <img [src]="conv.receptor.imagen || 'assets/default-user.png'" class="avatar" alt="Avatar">
       <div class="info">

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuario.controller');
+const validarImagen = require('../middlewares/validarImagen');
 
 // 🧪 Ruta de prueba
 router.get('/', (req, res) => {
@@ -33,5 +34,40 @@ router.get('/perfil-publico/:id', usuarioController.obtenerPerfilPublico);
 
 // ✏️ Actualizar información del perfil del usuario
 router.put('/:id', usuarioController.actualizarPerfil);
+
+// 📸 Subir imagen de perfil
+const multer = require('multer');
+const path = require('path');
+
+// Configuración de almacenamiento con multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/perfiles');
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `perfil_${Date.now()}${ext}`);
+  }
+});
+
+// ✅ Validación por tipo MIME real
+const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Máx 5MB
+  fileFilter: (req, file, cb) => {
+    if (tiposPermitidos.includes(file.mimetype)) return cb(null, true);
+    cb(new Error('Solo se permiten imágenes JPEG, PNG o WEBP'));
+  }
+});
+
+// Ruta para subir imagen de perfil
+router.put(
+  '/subir-imagen/:id',
+  upload.single('imagen'),
+  validarImagen,
+  usuarioController.subirImagenPerfil
+);
 
 module.exports = router;

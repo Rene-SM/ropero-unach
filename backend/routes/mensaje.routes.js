@@ -1,36 +1,38 @@
 const express = require('express');
 const router = express.Router();
-const mensajesController = require('../controllers/mensaje.controller');
+const mensajesController = require('../controllers/conversacion.controller'); // corregido
 
-// Envío de archivos
+// 📦 Configuración para subir imágenes de chat
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
-// Configuración de almacenamiento para imágenes de chat
+// Asegura que exista el directorio
+const dir = 'uploads/chat/';
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/chat/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
+  destination: (req, file, cb) => cb(null, dir),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 
 const upload = multer({ storage });
 
-// Obtener todas las conversaciones del usuario autenticado
+// 📥 Obtener lista de conversaciones del usuario autenticado
 router.get('/conversaciones', mensajesController.obtenerConversaciones);
 
-// Obtener los mensajes con otro usuario específico
+// 📄 Obtener mensajes con un usuario específico (modo directo)
 router.get('/conversacion/:idReceptor', mensajesController.obtenerMensajes);
 
-// Enviar un nuevo mensaje de texto
-router.post('/enviar', mensajesController.enviarMensaje);
+// 🟢 Enviar mensaje de texto
+router.post('/enviar/:id', mensajesController.enviarMensaje);
 
-// Enviar un nuevo mensaje con imagen
-router.post('/enviar-imagen', upload.single('imagen'), mensajesController.enviarMensajeConImagen);
+// 🟡 Enviar mensaje con imagen
+router.post('/enviar-imagen/:id', upload.single('imagen'), mensajesController.enviarMensajeConImagen);
 
-// ✅ NUEVA RUTA para obtener mensajes por solicitud
-router.get('/por-solicitud/:id', mensajesController.obtenerMensajesPorSolicitud);
+// (Si vas a usarlo en el futuro)
+// router.get('/por-solicitud/:id', mensajesController.obtenerMensajesPorSolicitud);
 
 module.exports = router;

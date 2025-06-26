@@ -47,8 +47,12 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem('token');
     this.usuarioAutenticado = false;
     this.nombreUsuario = '';
-    this.esAdmin = false; // ✅ limpiar el rol al cerrar sesión
-    this.router.navigate(['/']);
+    this.esAdmin = false;
+
+    // 🔁 Redirigir a inicio antes de recargar (opcional para asegurarse que esté en "/")
+    this.router.navigate(['/']).then(() => {
+      location.reload(); // 🔄 Recarga completa
+    });
   }
 
   mostrarMenuUsuario: boolean = false;

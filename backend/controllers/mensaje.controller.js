@@ -1,186 +1,122 @@
+// backend/controllers/conversacion.controller.js
 const db = require('../config/db');
 
-// ⚠️ Simulando que el usuario con ID 1 está autenticado
+// ⚠️ Simular ID autenticado (reemplázalo con auth real más adelante)
 const usuarioAutenticado = 1;
 
-exports.obtenerConversaciones = (req, res) => {
-  const sql = `
-    SELECT DISTINCT u.id_usuario, u.nombre, u.correo
-    FROM Mensajes m
-    JOIN Solicitudes s ON m.id_solicitud = s.id_solicitud
-    JOIN Usuario u ON (u.id_usuario = s.id_usuario AND u.id_usuario != ?)
-    WHERE s.id_usuario = ? OR s.id_producto IN (
-      SELECT id_producto FROM Productos WHERE id_usuario = ?
-    )
-    ORDER BY m.fecha_envio DESC
-  `;
+// Crear una nueva conversación si no existe ya
+exports.iniciarConversacion = async (req, res) => {
+  const { id_receptor } = req.body;
+  if (!id_receptor) return res.status(400).json({ error: 'Receptor requerido' });
 
-  db.query(sql, [usuarioAutenticado, usuarioAutenticado, usuarioAutenticado], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
+  try {
+    const [existe] = await db.query(
+      `SELECT * FROM Conversaciones WHERE 
+       (id_usuario1 = ? AND id_usuario2 = ?) OR 
+       (id_usuario1 = ? AND id_usuario2 = ?)`,
+      [usuarioAutenticado, id_receptor, id_receptor, usuarioAutenticado]
+    );
 
-    const conversaciones = result.map((row) => ({
-      receptor: row,
-      ultimoMensaje: null
-    }));
-    res.json(conversaciones);
-  });
-};
-
-exports.obtenerMensajes = (req, res) => {
-  const idReceptor = req.params.idReceptor;
-
-  const sql = `
-    SELECT m.*, m.id_emisor = ? AS esPropio
-    FROM Mensajes m
-    JOIN Solicitudes s ON m.id_solicitud = s.id_solicitud
-    WHERE (s.id_usuario = ? AND m.id_emisor = ?)
-       OR (s.id_usuario = ? AND m.id_emisor = ?)
-    ORDER BY m.fecha_envio ASC
-  `;
-
-  db.query(sql, [usuarioAutenticado, usuarioAutenticado, idReceptor, idReceptor, usuarioAutenticado], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(result);
-  });
-};
-
-exports.enviarMensaje = (req, res) => {
-  const { receptor, contenido } = req.body;
-
-  const sqlSolicitud = `
-    SELECT id_solicitud FROM Solicitudes
-    WHERE (id_usuario = ? AND id_producto IN (
-      SELECT id_producto FROM Productos WHERE id_usuario = ?
-    )) OR (id_usuario = ? AND id_producto IN (
-      SELECT id_producto FROM Productos WHERE id_usuario = ?
-    ))
-    LIMIT 1
-  `;
-
-  db.query(sqlSolicitud, [usuarioAutenticado, receptor, receptor, usuarioAutenticado], (err, solicitudRes) => {
-    if (err) return res.status(500).json({ error: err.message });
-
-    if (solicitudRes.length === 0) {
-      return res.status(400).json({ error: 'No hay solicitud activa entre estos usuarios' });
+    if (existe.length > 0) {
+      return res.status(200).json({ conversacion: existe[0], mensaje: 'Conversación ya existe' });
     }
 
-    const id_solicitud = solicitudRes[0].id_solicitud;
+    const [resultado] = await db.query(
+      `INSERT INTO Conversaciones (id_usuario1, id_usuario2) VALUES (?, ?)`,
+      [usuarioAutenticado, id_receptor]
+    );
 
-    const sqlInsert = `
-      INSERT INTO Mensajes (id_solicitud, id_emisor, contenido)
-      VALUES (?, ?, ?)
-    `;
+    const nuevaConversacion = {
+      id_conversacion: resultado.insertId,
+      id_usuario1: usuarioAutenticado,
+      id_usuario2: id_receptor
+    };
 
-    db.query(sqlInsert, [id_solicitud, usuarioAutenticado, contenido], (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
+    res.status(201).json({ conversacion: nuevaConversacion });
 
-      const nuevoMensaje = {
-        id_mensaje: result.insertId,
-        id_solicitud,
-        id_emisor: usuarioAutenticado,
-        contenido,
-        esPropio: true,
-        fecha_envio: new Date()
-      };
-
-      res.json(nuevoMensaje);
-    });
-  });
-};
-
-exports.enviarMensajeConImagen = (req, res) => {
-  const { receptor } = req.body;
-  const imagen = req.file ? req.file.filename : null;
-
-  if (!imagen) {
-    return res.status(400).json({ error: 'No se recibió ninguna imagen' });
+  } catch (error) {
+    console.error('❌ Error al iniciar conversación:', error);
+    res.status(500).json({ error: 'Error al iniciar conversación' });
   }
-
-  const sqlSolicitud = `
-    SELECT id_solicitud FROM Solicitudes
-    WHERE (id_usuario = ? AND id_producto IN (
-      SELECT id_producto FROM Productos WHERE id_usuario = ?
-    )) OR (id_usuario = ? AND id_producto IN (
-      SELECT id_producto FROM Productos WHERE id_usuario = ?
-    ))
-    LIMIT 1
-  `;
-
-  db.query(sqlSolicitud, [usuarioAutenticado, receptor, receptor, usuarioAutenticado], (err, solicitudRes) => {
-    if (err) return res.status(500).json({ error: err.message });
-
-    if (solicitudRes.length === 0) {
-      return res.status(400).json({ error: 'No hay solicitud activa entre estos usuarios' });
-    }
-
-    const id_solicitud = solicitudRes[0].id_solicitud;
-
-    const sqlInsert = `
-      INSERT INTO Mensajes (id_solicitud, id_emisor, contenido)
-      VALUES (?, ?, ?)
-    `;
-
-    db.query(sqlInsert, [id_solicitud, usuarioAutenticado, imagen], (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
-
-      const nuevoMensaje = {
-        id_mensaje: result.insertId,
-        id_solicitud,
-        id_emisor: usuarioAutenticado,
-        contenido: imagen,
-        esPropio: true,
-        fecha_envio: new Date(),
-        imagen: `uploads/chat/${imagen}`
-      };
-
-      res.json(nuevoMensaje);
-    });
-  });
 };
 
-// ✅ NUEVO MÉTODO: obtener mensajes por solicitud (modificado)
-exports.obtenerMensajesPorSolicitud = async (req, res) => {
-  const id_solicitud = req.params.id;
+// Obtener conversaciones del usuario actual
+exports.obtenerConversaciones = async (req, res) => {
+  try {
+    const [resultados] = await db.query(
+      `SELECT c.*, u.id_usuario, u.nombre, u.imagen
+       FROM Conversaciones c
+       JOIN Usuario u ON (u.id_usuario = IF(c.id_usuario1 = ?, c.id_usuario2, c.id_usuario1))
+       WHERE c.id_usuario1 = ? OR c.id_usuario2 = ?
+       ORDER BY c.fecha_ultima DESC`,
+      [usuarioAutenticado, usuarioAutenticado, usuarioAutenticado]
+    );
+
+    const conversaciones = resultados.map((fila) => ({
+      id_conversacion: fila.id_conversacion,
+      receptor: {
+        id_usuario: fila.id_usuario,
+        nombre: fila.nombre,
+        imagen: fila.imagen
+      }
+    }));
+
+    res.json(conversaciones);
+
+  } catch (error) {
+    console.error('❌ Error al obtener conversaciones:', error);
+    res.status(500).json({ error: 'Error al obtener conversaciones' });
+  }
+};
+
+// Obtener mensajes de una conversación
+exports.obtenerMensajes = async (req, res) => {
+  const id = req.params.id;
 
   try {
     const [mensajes] = await db.query(
-      `SELECT m.*, u.nombre
-       FROM Mensajes m
-       JOIN Usuario u ON u.id_usuario = m.id_emisor
-       WHERE m.id_solicitud = ?
-       ORDER BY m.fecha_envio ASC`,
-      [id_solicitud]
+      `SELECT *, id_emisor = ? AS esPropio
+       FROM Mensajes
+       WHERE id_conversacion = ?
+       ORDER BY fecha_envio ASC`,
+      [usuarioAutenticado, id]
     );
 
-    const [solicitud] = await db.query(
-      `SELECT s.*, 
-              p.id_usuario AS id_vendedor,
-              u1.nombre AS nombre_vendedor, u1.imagen AS imagen_vendedor,
-              u2.id_usuario AS id_comprador, u2.nombre AS nombre_comprador, u2.imagen AS imagen_comprador
-       FROM Solicitudes s
-       JOIN Productos p ON p.id_producto = s.id_producto
-       JOIN Usuario u1 ON u1.id_usuario = p.id_usuario
-       JOIN Usuario u2 ON u2.id_usuario = s.id_usuario
-       WHERE s.id_solicitud = ?`,
-      [id_solicitud]
-    );
-
-    if (solicitud.length === 0) {
-      return res.status(404).json({ mensaje: 'Solicitud no encontrada' });
-    }
-
-    const s = solicitud[0];
-
-    // ✅ Determinar cuál es el otro usuario (el receptor)
-   const receptor =
-    s.id_vendedor === usuarioAutenticado
-      ? { id_usuario: s.id_comprador, nombre: s.nombre_comprador }
-      : { id_usuario: s.id_vendedor, nombre: s.nombre_vendedor };
-
-    res.json({ mensajes, receptor });
+    res.json(mensajes);
 
   } catch (error) {
-    console.error('❌ Error al obtener mensajes por solicitud:', error);
-    res.status(500).json({ mensaje: 'Error al obtener mensajes por solicitud' });
+    console.error('❌ Error al obtener mensajes:', error);
+    res.status(500).json({ error: 'Error al obtener mensajes' });
+  }
+};
+
+// Enviar mensaje de texto
+exports.enviarMensaje = async (req, res) => {
+  const id = req.params.id;
+  const { contenido } = req.body;
+
+  if (!contenido) return res.status(400).json({ error: 'Contenido requerido' });
+
+  try {
+    const [resultado] = await db.query(
+      `INSERT INTO Mensajes (id_conversacion, id_emisor, contenido)
+       VALUES (?, ?, ?)`,
+      [id, usuarioAutenticado, contenido]
+    );
+
+    const nuevo = {
+      id_mensaje: resultado.insertId,
+      id_conversacion: id,
+      id_emisor: usuarioAutenticado,
+      contenido,
+      esPropio: true,
+      fecha_envio: new Date()
+    };
+
+    res.status(201).json(nuevo);
+
+  } catch (error) {
+    console.error('❌ Error al enviar mensaje:', error);
+    res.status(500).json({ error: 'Error al enviar mensaje' });
   }
 };

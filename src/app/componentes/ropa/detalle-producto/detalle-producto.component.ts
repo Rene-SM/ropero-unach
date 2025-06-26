@@ -95,6 +95,13 @@ export class DetalleProductoComponent implements OnInit {
       error: (err) => {
         console.error('Error al iniciar conversación', err);
       }
+      
     });
   }
+  
+  esPropietario(): boolean {
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
+  return usuarioLocal?.id_usuario === this.producto?.usuario?.id_usuario;
+  }
+
 }

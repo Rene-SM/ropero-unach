@@ -1,0 +1,58 @@
+/* --- Animaciones para la Sección "Cómo Funciona" --- */
+
+/* Animación de Fade In (aparecer gradualmente) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+  opacity: 0; /* Asegura que el elemento esté oculto antes de la animación */
+}
+
+/* Animación de Slide In Up (deslizarse desde abajo y aparecer) */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.7s ease-out forwards;
+  opacity: 0; /* Asegura que el elemento esté oculto antes de la animación */
+}
+
+/* Retrasos para las animaciones (opcional, para un efecto escalonado) */
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-600 { animation-delay: 0.6s; } /* Para el tercer paso */
+.animation-delay-900 { animation-delay: 0.9s; } /* Para el botón final */
+
+/* Asegúrate de que los colores y la tipografía de Tailwind CSS estén configurados correctamente */
+/* Estas son las definiciones estándar de Tailwind, no necesitas copiarlas si ya tienes Tailwind configurado */
+/* Sino, podrías añadirlas a tu archivo CSS principal o tailwind.config.js si son colores personalizados */
+/*
+  .text-green-700 { color: #047857; }
+  .text-green-600 { color: #059669; }
+  .text-green-800 { color: #065F46; }
+  .bg-green-50 { background-color: #F0FDF4; }
+*/
+
+.titulo-principal {
+  font-size: 3rem;       /* ~48px */
+  font-weight: 600;      /* Bold */
+  line-height: 1.0
+}
+
+@media (min-width: 768px) {
+  .titulo-principal {
+    font-size: 3rem;     /* ~64px en pantallas medianas y grandes */
+  }
+}

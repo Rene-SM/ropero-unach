@@ -9,25 +9,80 @@
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 900px;
   width: 100%;
-  padding: 30px;
+  padding: 40px;
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* ENCABEZADO */
+.perfil-encabezado {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.foto-perfil {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+}
+
+.info-perfil {
+  flex: 1;
+  min-width: 250px;
+}
+
+.header-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
 .nombre-usuario {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 700;
   color: #1a202c;
+}
+
+.nombre-completo,
+.rut,
+.tipo-usuario {
+  font-size: 16px;
+  color: #4a5568;
+  font-weight: 500;
   margin-bottom: 4px;
 }
 
-.rut {
-  font-size: 14px;
-  color: #4a5568;
-  margin-bottom: 20px;
+/* BOTONES */
+.btn-mensaje,
+.btn-editar {
+  background-color: #2d3748;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
+.btn-mensaje:hover,
+.btn-editar:hover {
+  background-color: #1a202c;
+  transform: translateY(-1px);
+}
+
+/* SECCIONES */
 .bloque {
   margin-top: 20px;
   border-top: 1px solid #e2e8f0;
@@ -65,7 +120,7 @@
 
 .barra-valor {
   height: 100%;
-  background-color: #ecc94b; /* amarillo Falabella */
+  background-color: #ecc94b;
   border-radius: 5px;
 }
 
@@ -99,4 +154,11 @@
   margin-top: 6px;
   font-size: 14px;
   color: #4a5568;
+}
+
+.fecha-registro {
+  font-size: 15px;
+  color: #4a5568;
+  font-weight: 500;
+  margin-bottom: 4px;
 }

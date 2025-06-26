@@ -241,7 +241,7 @@
   background-color: #c62828;
 }
 
-/* 🟢 NUEVO: Tarjetas del historial de publicaciones */
+/* 🟢 Historial de publicaciones */
 .publicaciones-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -288,53 +288,7 @@
   margin-top: 0.5rem;
 }
 
-.publicaciones-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.tarjeta-publicacion {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 1rem;
-  background: #fafafa;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  transition: transform 0.2s ease;
-}
-
-.tarjeta-publicacion:hover {
-  transform: scale(1.015);
-}
-
-.tarjeta-publicacion img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 0.8rem;
-}
-
-.tarjeta-publicacion h3 {
-  font-size: 1.1rem;
-  color: #333;
-  margin-bottom: 0.3rem;
-}
-
-.tarjeta-publicacion p {
-  font-size: 0.95rem;
-  color: #555;
-  margin: 0.2rem 0;
-}
-
-.tarjeta-publicacion .fecha {
-  font-size: 0.85rem;
-  color: #999;
-  margin-top: 0.5rem;
-}
-
-/* 🛡️ HISTORIAL DE MODERACIÓN */
+/* 🛡️ Historial de moderación */
 .moderacion-lista {
   display: flex;
   flex-direction: column;
@@ -376,4 +330,49 @@
 
 .boton-ver-perfil:hover {
   background-color: #004d40;
+}
+
+/* ✅ Imagen de perfil redonda */
+.imagen-perfil {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #2e7d32;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+}
+
+/* ✅ Contenedor del input para subir imagen */
+.input-imagen-perfil {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input-imagen-perfil input[type="file"] {
+  padding: 0.4rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* ✅ Botón para subir imagen */
+.boton-subir-imagen {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.boton-subir-imagen:hover {
+  background-color: #1b5e20;
 }

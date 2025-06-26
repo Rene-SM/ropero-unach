@@ -40,7 +40,31 @@
     <p *ngIf="producto.tipo_operacion === 'vender'"><strong>Precio:</strong> ${{ producto.precio | number:'1.0-0' }}</p>
     <p><strong>Talla:</strong> {{ producto.talla || 'No especificada' }}</p>
 
-    <!-- ✅ BOTÓN MODIFICADO -->
-    <button class="solicitar-btn" (click)="iniciarConversacion()">Iniciar conversación</button>
+    <!-- ✅ SECCIÓN FINAL ORDENADA + LÍNEA -->
+    <div class="info-extra text-center mt-12">
+
+      <!-- ¿Te interesa este producto? -->
+      <p class="text-gray-700 text-base font-medium mb-3">¿Te interesa este producto?</p>
+      <button class="solicitar-btn" (click)="iniciarConversacion()">
+        Iniciar conversación
+      </button>
+
+      <!-- Separador -->
+      <hr class="my-10 border-gray-300">
+
+      <!-- Publicado por -->
+      <p class="text-sm text-gray-600 mb-1">Publicado por:</p>
+
+      <ng-container *ngIf="esPropietario(); else mostrarPublicador">
+        <span class="text-green-600 font-semibold">Tú</span>
+      </ng-container>
+
+      <ng-template #mostrarPublicador>
+        <a [routerLink]="['/perfil-publico', producto.usuario?.id_usuario]"
+          class="text-green-600 hover:underline font-medium">
+          {{ producto.usuario?.nombre }} {{ producto.usuario?.apellidos }}
+        </a>
+      </ng-template>
+    </div>
   </div>
 </div>

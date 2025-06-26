@@ -56,7 +56,7 @@
       <p class="text-sm text-gray-600 mb-1">Publicado por:</p>
 
       <ng-container *ngIf="esPropietario(); else mostrarPublicador">
-        <span class="text-green-600 font-semibold">Tú</span>
+        <span class="text-green-600 font-semibold">Ti</span>
       </ng-container>
 
       <ng-template #mostrarPublicador>
@@ -66,5 +66,8 @@
         </a>
       </ng-template>
     </div>
+    
+      <app-inicio-sesion #loginComponent></app-inicio-sesion> <!-- Modal oculto aquí -->
+
   </div>
 </div>

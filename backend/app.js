@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const db = require('./config/db');
@@ -28,7 +29,6 @@ app.use('/uploads/perfiles', express.static('uploads/perfiles')); // ✅ NUEVO: 
 // 🔌 Rutas API
 app.use('/api/usuario', require('./routes/usuario.routes'));     // Singular
 app.use('/api/productos', require('./routes/producto.routes'));
-app.use('/api/mensajes', require('./routes/mensaje.routes'));
 app.use('/api/solicitudes', require('./routes/solicitud.routes'));
 
 // 🔎 Ruta raíz de prueba

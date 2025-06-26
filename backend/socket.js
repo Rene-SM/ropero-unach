@@ -11,8 +11,15 @@ function initSocket(server) {
   io.on('connection', (socket) => {
     console.log('🟢 Cliente conectado');
 
+    // Escuchar evento de unión a una sala
+    socket.on('unirseConversacion', (idConversacion) => {
+      socket.join(`conversacion_${idConversacion}`);
+    });
+
     socket.on('mensajeEnviado', (mensaje) => {
-      io.emit('mensajeNuevo', mensaje);
+      const idConversacion = mensaje.id_conversacion;
+      // Emitir mensaje solo a la sala correspondiente
+      io.to(`conversacion_${idConversacion}`).emit('mensajeNuevo', mensaje);
     });
 
     socket.on('disconnect', () => {

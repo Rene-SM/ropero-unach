@@ -100,13 +100,14 @@
 }
 
 .mensaje-burbuja.propio {
-  background-color: #c6f6d5;
   align-self: flex-end;
+  background-color: #dcf8c6;
 }
+
 
 /* Input de mensaje */
 .input-mensaje {
-  display: flex;
+  display: flex;  
   border-top: 1px solid #e0e0e0;
   padding: 12px 16px;
 }

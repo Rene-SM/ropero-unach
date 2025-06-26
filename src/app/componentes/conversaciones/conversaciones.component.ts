@@ -31,7 +31,7 @@ export class ConversacionesComponent implements OnInit {
     this.socket = io('http://localhost:3000');
 
     this.route.params.subscribe(params => {
-      this.idConversacion = Number(params['id_solicitud']);
+      this.idConversacion = Number(params['id_conversacion']);
       if (this.idConversacion) {
         this.cargarMensajes(this.idConversacion);
       }
@@ -62,6 +62,7 @@ export class ConversacionesComponent implements OnInit {
   abrirConversacion(conv: any) {
     this.usuarioActivo = conv.receptor || conv;
     this.idConversacion = conv.id_conversacion;
+    this.socket.emit('unirseConversacion', this.idConversacion); // ✅ UNIRSE A LA SALA
     this.cargarMensajes(this.idConversacion);
   }
 

@@ -30,6 +30,8 @@ app.use('/uploads/perfiles', express.static('uploads/perfiles')); // ✅ NUEVO: 
 app.use('/api/usuario', require('./routes/usuario.routes'));     // Singular
 app.use('/api/productos', require('./routes/producto.routes'));
 app.use('/api/solicitudes', require('./routes/solicitud.routes'));
+app.use('/api/calificaciones', require('./routes/calificacion.routes'));
+
 
 // 🔎 Ruta raíz de prueba
 app.get('/', (req, res) => {

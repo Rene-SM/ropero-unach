@@ -1,0 +1,143 @@
+/* Sección principal */
+.py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.md\:px-20 { /* En pantallas medianas, padding de 5rem (80px) */
+  padding-left: 5rem;
+  padding-right: 5rem;
+}
+.text-gray-800 { color: #2D3748; }
+
+/* Contenedor central */
+.max-w-4xl { max-width: 56rem; /* 896px */ }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.text-center { text-align: center; }
+
+/* Título */
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.md\:text-5xl { /* En pantallas medianas, font-size de 3rem (48px), line-height de 1 */
+  font-size: 3rem;
+  line-height: 1;
+}
+.font-extrabold { font-weight: 800; }
+.mb-4 { margin-bottom: 1rem; }
+.text-green-700 { color: #04785E; } /* Verde más oscuro para el título */
+
+/* Párrafo introductorio */
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-gray-600 { color: #718096; }
+.mb-10 { margin-bottom: 2.5rem; }
+.leading-relaxed { line-height: 1.625; }
+
+/* Contenedor de botones principales */
+.flex-col { flex-direction: column; }
+.sm\:flex-row { /* En pantallas pequeñas (sm), se convierte en fila */
+  flex-direction: row;
+}
+.justify-center { justify-content: center; }
+.gap-6 { gap: 1.5rem; }
+.mb-12 { margin-bottom: 3rem; }
+
+/* Estilos para los botones principales (Donar a la Comunidad, Apoyar Agrupaciones) */
+.inline-flex { display: inline-flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.bg-green-600 { background-color: #059669; }
+.hover\:bg-green-700:hover { background-color: #04785E; }
+.bg-blue-600 { background-color: #2563EB; }
+.hover\:bg-blue-700:hover { background-color: #1D4ED8; }
+.text-white { color: #fff; }
+.font-bold { font-weight: 700; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.px-8 { padding-left: 2rem; padding-right: 2rem; }
+.rounded-full { border-radius: 9999px; } /* Hace los botones completamente redondos */
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.transition { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-300 { transition-duration: 0.3s; }
+.transform { transform: var(--tw-transform); }
+.hover\:scale-105:hover { transform: scale(1.05); }
+.w-6 { width: 1.5rem; }
+.h-6 { height: 1.5rem; }
+.mr-3 { margin-right: 0.75rem; }
+
+/* Contenedor de descripciones (grid) */
+.mt-10 { margin-top: 2.5rem; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.md\:grid-cols-2 { /* En pantallas medianas, 2 columnas */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.gap-8 { gap: 2rem; }
+.text-left { text-align: left; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+
+/* Estilos para las tarjetas de descripción */
+.bg-green-50 { background-color: #F0FDF4; }
+.bg-blue-50 { background-color: #EFF6FF; }
+.p-6 { padding: 1.5rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.hover-translate-y-minus-5px:hover { transform: translateY(-0.3125rem); } /* Mueve 5px hacia arriba */
+.transition { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.duration-300 { transition-duration: 0.3s; }
+
+/* Iconos dentro de las tarjetas */
+.w-8 { width: 2rem; }
+.h-8 { height: 2rem; }
+.text-green-700 { color: #04785E; }
+.text-blue-700 { color: #1D4ED8; }
+.mr-3 { margin-right: 0.75rem; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.mb-3 { margin-bottom: 0.75rem; }
+
+/* Títulos de las tarjetas de descripción */
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.font-bold { font-weight: 700; }
+
+
+/* Definición de la animación de pulso */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+/* Estilos para el botón "Ver Catálogo" (clase .btn-form-donate) */
+.btn-form-donate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #059669; /* Verde similar a bg-green-600 */
+  color: #ffffff; /* Blanco */
+  font-weight: 700; /* Negrita */
+  padding: 0.75rem 1.5rem; /* Relleno: py-3 px-6 */
+  border-radius: 9999px; /* Completamente redondo */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Sombra media */
+  transition-property: all;
+  transition-duration: 0.3s; /* Transición suave */
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none; /* Quita el subrayado predeterminado del enlace */
+  font-size: 1rem; /* Tamaño de fuente base */
+}
+
+/* Estilos al pasar el mouse sobre el botón */
+.btn-form-donate:hover {
+  background-color: #04785E; /* Verde más oscuro al pasar el mouse */
+  transform: scale(1.02); /* Ligero escalado al pasar el mouse */
+}
+
+/* Aplicar la animación de pulso */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Estilos para el ícono SVG dentro del botón */
+.btn-form-donate svg {
+  margin-right: 0.75rem; /* Margen a la derecha del ícono */
+  height: 1.5rem; /* Altura del ícono */
+  width: 1.5rem; /* Ancho del ícono */
+}

@@ -5,29 +5,29 @@ import { RouterModule } from '@angular/router';
 import { ProductoService } from '../../sesion/nueva-publicacion/producto.service';
 import { SolicitudService } from '../../conversaciones/solicitud.service';
 import Swal from 'sweetalert2';
-import { InicioSesionComponent } from '../../sesion/inicio-sesion/inicio-sesion.component'; // ajusta si cambia la ruta
- // ✅ Importar el modal
+import { InicioSesionComponent } from '../../sesion/inicio-sesion/inicio-sesion.component';
+import { HttpClient } from '@angular/common/http'; // ✅ agregado
 
 @Component({
   standalone: true,
   selector: 'app-detalle-producto',
   templateUrl: './detalle-producto.component.html',
   styleUrls: ['./detalle-producto.component.css'],
-  imports: [CommonModule, RouterModule, InicioSesionComponent] // ✅ Importar el modal aquí
+  imports: [CommonModule, RouterModule, InicioSesionComponent]
 })
 export class DetalleProductoComponent implements OnInit {
   producto: any = null;
   imagenSeleccionada: string = '';
   indiceActual: number = 0;
 
-  // ✅ Referencia al modal de login
   @ViewChild('loginComponent') loginComponent!: InicioSesionComponent;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productoService: ProductoService,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+    private http: HttpClient // ✅ agregado aquí también
   ) {}
 
   ngOnInit(): void {
@@ -91,31 +91,31 @@ export class DetalleProductoComponent implements OnInit {
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          this.loginComponent.abrirModal(); // ✅ Abrir modal de login
+          this.loginComponent.abrirModal();
         }
       });
 
       return;
     }
 
-    const data = {
-      id_producto: this.producto.id_producto,
-      id_usuario: usuario.id_usuario
+    const datos = {
+      id_emisor: usuario.id_usuario,
+      id_receptor: this.producto.id_usuario // ✅ CORREGIDO
     };
 
-    this.solicitudService.iniciarSolicitud(data).subscribe({
+    this.http.post<any>('http://localhost:3000/api/conversaciones/iniciar', datos).subscribe({
       next: (res) => {
-        const id_solicitud = res.id_solicitud;
-        this.router.navigate(['/conversaciones', id_solicitud]);
+        const idConversacion = res.conversacion.id_conversacion;
+        this.router.navigate(['/conversaciones', idConversacion]);
       },
       error: (err) => {
-        console.error('Error al iniciar conversación', err);
+        console.error('❌ Error al iniciar conversación:', err);
       }
     });
   }
 
   esPropietario(): boolean {
     const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
-    return usuarioLocal?.id_usuario === this.producto?.usuario?.id_usuario;
+    return usuarioLocal?.id_usuario === this.producto?.id_usuario; // ✅ también corregido
   }
 }

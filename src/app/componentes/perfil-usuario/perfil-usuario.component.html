@@ -7,15 +7,17 @@
       <div class="info-perfil">
         <div class="header-line">
           <h2 class="nombre-usuario">{{ perfil.nombre }} {{ perfil.apellidos }}</h2>
+
           <ng-container *ngIf="esMiPerfil; else botonMensaje">
             <button class="btn-editar" routerLink="/perfil">Editar perfil</button>
           </ng-container>
-            <ng-template #botonMensaje>
-              <button (click)="iniciarConversacion()" class="btn btn-mensaje bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition">
+          <ng-template #botonMensaje>
+            <button (click)="iniciarConversacion()" class="btn btn-mensaje bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition">
               Enviar mensaje
-              </button>
-            </ng-template>
+            </button>
+          </ng-template>
         </div>
+
         <p class="rut">RUT: {{ perfil.rut }}</p>
         <p class="tipo-usuario">{{ perfil.tipo }}</p>
         <p class="fecha-registro">Miembro desde: {{ perfil.fecha_registro | date:'dd/MM/yyyy' }}</p>
@@ -24,7 +26,16 @@
 
     <!-- CALIFICACIONES -->
     <div class="bloque">
-      <h3>Calificaciones</h3>
+      <div class="flex justify-between items-center mb-2">
+        <h3>Calificaciones</h3>
+          <ng-container *ngIf="!esMiPerfil">
+            <button (click)="enviarCalificacionModal()"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 rounded-md text-sm shadow">
+              Calificar usuario
+            </button>
+          </ng-container>
+      </div>
+
       <ng-container *ngIf="perfil.promedio; else sinCalificaciones">
         <div class="flex items-center mb-2">
           <span class="text-3xl font-bold text-yellow-500">{{ perfil.promedio }}</span>
@@ -44,12 +55,6 @@
       </ng-template>
     </div>
 
-    <!-- TRANSACCIONES -->
-    <div class="bloque">
-      <h3>Transacciones realizadas</h3>
-      <p>{{ perfil.transacciones }} transacciones</p>
-    </div>
-
     <!-- COMENTARIOS -->
     <div class="bloque" *ngIf="perfil.calificaciones.length > 0">
       <h3>Comentarios recibidos</h3>
@@ -62,6 +67,12 @@
           <p class="text-sm text-gray-700 mt-1">{{ cal.comentario }}</p>
         </li>
       </ul>
+    </div>
+
+    <!-- TRANSACCIONES -->
+    <div class="bloque">
+      <h3>Transacciones realizadas</h3>
+      <p>{{ perfil.transacciones }} transacciones</p>
     </div>
 
   </div>

@@ -34,13 +34,15 @@ export const routes: Routes = [
   { path: 'categoria/ropa-mujer', component: RopaMujerComponent },
   { path: 'categoria/accesorios', component: AccesoriosComponent },
 
-  // ✅ Otros componentes principales
+  // ✅ Publicación (ya estaba bien definida para los botones de donación)
   {
     path: 'nueva-publicacion',
     loadComponent: () =>
       import('./componentes/sesion/nueva-publicacion/nueva-publicacion.component')
         .then(m => m.NuevaPublicacionComponent)
   },
+
+  // ✅ Conversaciones
   {
     path: 'conversaciones',
     loadComponent: () =>
@@ -48,11 +50,13 @@ export const routes: Routes = [
         .then(m => m.ConversacionesComponent)
   },
   {
-  path: 'conversaciones/:id_solicitud',
+    path: 'conversaciones/:id_solicitud',
     loadComponent: () =>
       import('./componentes/conversaciones/conversaciones.component')
         .then(m => m.ConversacionesComponent)
   },
+
+  // ✅ Perfil personal y público
   {
     path: 'perfil',
     loadComponent: () =>
@@ -60,11 +64,12 @@ export const routes: Routes = [
         .then(m => m.PerfilComponent)
   },
   {
-  path: 'perfil-publico/:id',
-  loadComponent: () =>
-    import('./componentes/perfil-usuario/perfil-usuario.component')
-      .then(m => m.PerfilUsuarioComponent)
-},
+    path: 'perfil-publico/:id',
+    loadComponent: () =>
+      import('./componentes/perfil-usuario/perfil-usuario.component')
+        .then(m => m.PerfilUsuarioComponent)
+  },
+
   { path: 'detalle-producto/:id', component: DetalleProductoComponent },
 
   // ✅ Rutas del footer (nombre corregido: "footerinfo")

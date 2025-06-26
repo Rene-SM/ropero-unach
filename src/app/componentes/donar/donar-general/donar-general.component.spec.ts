@@ -11,7 +11,7 @@ describe('DonarGeneralComponent', () => {
       imports: [DonarGeneralComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(DonarGeneralComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

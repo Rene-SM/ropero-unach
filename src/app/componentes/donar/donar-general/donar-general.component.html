@@ -1,29 +1,86 @@
 <section class="bg-white py-16 px-4 md:px-20 text-gray-800">
   <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-4xl font-bold mb-6 text-green-600">Donar es ayudar</h2>
-    <p class="text-lg text-gray-600 mb-10">
-      Cada prenda puede marcar la diferencia. A través de Ropero UNACH puedes aportar a quienes más lo necesitan, dentro y fuera de la comunidad universitaria.
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-green-700">
+      Donar es Ayudar: ¡Tu Ropa Hace la Diferencia!
+    </h2>
+    <p class="text-xl text-gray-600 mb-10 leading-relaxed">
+      Cada prenda que ya no utilizas tiene el potencial de marcar una gran diferencia.
+      A través de Ropero UNACH, tienes la oportunidad de aportar a quienes más lo necesitan,
+      tanto dentro de nuestra comunidad universitaria como en otras partes.
     </p>
 
-    <div class="flex flex-col md:flex-row justify-center gap-6">
-      <a routerLink="/donar/comunidad"
-         class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
-        Donar a la comunidad
-      </a>
-      <a routerLink="/donar/agrupaciones"
-         class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
-        Donar a agrupaciones
-      </a>
+    <div class="flex flex-col sm:flex-row justify-center gap-6 mb-12">
+      <button
+        (click)="irANuevaPublicacion()"
+        class="inline-flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105"
+      >
+        <svg class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20v-2c0-.653-.141-1.282-.4-1.857m0 0a5.002 5.002 0 00-4.87-8.23l-.13-.02A5.002 5.002 0 005.13 5.41a5.002 5.002 0 00-1.857 5.356m0 0H2a3 3 0 005.356 1.857M5 10a2 2 0 11-4 0 2 2 0 014 0zM12 18a6 6 0 100-12 6 6 0 000 12z" />
+        </svg>
+        Donar a la Comunidad
+      </button>
+
+      <button
+        (click)="irANuevaPublicacion()"
+        class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105"
+      >
+        <svg class="w-6 h-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 6.253v13.435m0-13.435C5.065 6.477 2 9.492 2 13.06c0 2.923 2.302 5.068 5.765 6.096C10.279 20.912 12 22 12 22s1.721-1.088 4.235-2.844c3.463-1.028 5.765-3.173 5.765-6.096 0-3.568-3.065-6.583-10-6.807z" />
+        </svg>
+        Donar a Agrupaciones
+      </button>
     </div>
 
-    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-left text-sm text-gray-700">
-      <div class="bg-green-50 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-green-700">Donar a la comunidad</h3>
-        <p>Cuando donas a la comunidad, tu publicación será visible para todos aquellos funcionarios y estudiantes. Con el fin de encontrar al próximo dueño de tu prenda, manteniendo un ciclo de reciclaje y dando nuevas oportunidades para nuevos diseños, outfits y maneras de ocupar la prenda. El único límite lo colocas tú, elige la manera de vivir, elige la manera de darle vida a tu ropa.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left text-base text-gray-700">
+      <div
+        class="bg-green-50 p-6 rounded-lg shadow-lg hover:translate-y-[-5px] transition duration-300 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center mb-3">
+            <svg class="w-8 h-8 text-green-700 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+              stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 14c-4.418 0-8 3.582-8 8h16c0-4.418-3.582-8-8-8z" />
+            </svg>
+            <h3 class="text-xl font-bold text-green-700">Donar a la Comunidad</h3>
+          </div>
+          <p class="mb-6">
+            Cuando donas a la comunidad, tu publicación será visible para todos los funcionarios y estudiantes.
+            Esto tiene el fin de encontrar al próximo dueño de tu prenda, manteniendo un ciclo de reciclaje
+            y dando nuevas oportunidades para crear diseños, outfits y diferentes maneras de utilizar la ropa.
+            El único límite lo colocas tú. ¡Elige la manera de vivir, elige la manera de darle vida a tu ropa!
+          </p>
+        </div>
+        <div class="mt-auto text-center">
+          <button (click)="irACatalogoComunidad()" class="btn-form-donate animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-6 w-6" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z" />
+            </svg>
+            Ver Catálogo
+          </button>
+        </div>
       </div>
-      <div class="bg-blue-50 p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2 text-blue-700">Donar a agrupaciones</h3>
-        <p>Cuando donas en una agrupación ayudas a que llegue a otras partes en donde tu prenda puede ser usada nuevamente, cuando una agrupación va en ayuda de lugares necesitados, pueden dar una nueva vida a tu prenda para que la necesidad de una persona sea suplida y dando color y estilo a su vivir. En tus manos está la decisión de generar una nueva vida a tu prenda en ayuda de los demás, ¿te animas?</p>
+
+      <div
+        class="bg-blue-50 p-6 rounded-lg shadow-lg hover:translate-y-[-5px] transition duration-300">
+        <div class="flex items-center mb-3">
+          <svg class="w-8 h-8 text-blue-700 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 6s.7 9.5 4.9 14 6.2 2 6.2 2M2 7s1 9 4.9 13.5S17 21 17 21M9 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2h-4" />
+          </svg>
+          <h3 class="text-xl font-bold text-blue-700">Donar a Agrupaciones</h3>
+        </div>
+        <p>
+          Cuando donas a una agrupación, ayudas a que tu prenda llegue a lugares donde puede ser utilizada nuevamente.
+          Cuando una agrupación va en ayuda de zonas necesitadas, tus prendas pueden tener una nueva vida
+          y suplir la necesidad de una persona, dándole color y estilo a su día a día.
+          En tus manos está la decisión de generar una <strong>nueva vida</strong> a tu prenda en ayuda de los demás.
+          ¿Te animas?
+        </p>
       </div>
     </div>
   </div>
